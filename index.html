@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pocket Pals</title>
+<meta name="description" content="Who wakes up when you put the phone down? A 2-minute quiz for the Touch Grass phone-free hangout.">
+<meta property="og:title" content="Pocket Pals">
+<meta property="og:description" content="Who wakes up when you put the phone down? Find your Pal before Sunday's hangout.">
+<meta name="theme-color" content="#FFF8EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 12C62 30 82 46 84 66C86 86 70 94 50 94C30 94 14 86 16 66C18 46 38 30 50 12Z' fill='%2356B4E9' stroke='%231F2A44' stroke-width='6'/%3E%3Ccircle cx='40' cy='62' r='5' fill='%231F2A44'/%3E%3Ccircle cx='60' cy='62' r='5' fill='%231F2A44'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1F2A44;
+    --bg:#FFF8EC;
+    --paper:#FFFDF8;
+    --denim:#2E4A72;
+    --soft:rgba(31,42,68,.16);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font:400 17px/1.5 'Nunito',system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* subtle paper grain over everything */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.09;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .12 0 0 0 0 .16 0 0 0 0 .27 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:440px;margin:0 auto;padding:16px 20px calc(28px + env(safe-area-inset-bottom));min-height:100vh;min-height:100svh;display:flex;flex-direction:column}
+  .screen{display:flex;flex-direction:column;flex:1}
+  .screen[hidden]{display:none}
+  .screen.enter{animation:fadeUp .4s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  h1,h2,.display{font-family:'Gaegu',cursive;font-weight:700;line-height:1.05;margin:0}
+  h1:focus,h2:focus{outline:none}
+  p{margin:0}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+    min-height:58px;padding:14px 22px;cursor:pointer;
+    font:800 18px/1.2 'Nunito',sans-serif;color:var(--ink);
+    background:var(--paper);border:3px solid var(--ink);
+    border-radius:18px 21px 17px 22px;
+    box-shadow:0 5px 0 var(--ink);
+    transition:transform .08s ease,box-shadow .08s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+  .btn-primary{background:var(--ink);color:var(--bg);box-shadow:0 5px 0 rgba(31,42,68,.35)}
+  .btn-primary:active{box-shadow:0 1px 0 rgba(31,42,68,.35)}
+  .btn svg{flex:none}
+  .linkbtn{
+    background:none;border:0;color:var(--ink);font:700 16px 'Nunito',sans-serif;
+    text-decoration:underline;text-decoration-style:wavy;text-underline-offset:5px;
+    min-height:48px;padding:8px 14px;cursor:pointer;
+  }
+  :focus-visible{outline:3px dashed var(--ink);outline-offset:4px}
+
+  .foot{margin-top:auto;padding-top:28px;text-align:center;font-size:14px;opacity:.75}
+  .foot b{font-family:'Gaegu',cursive;font-size:19px}
+
+  /* ---------- landing ---------- */
+  .eyebrow{font:800 13px 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;text-align:center;margin-top:6px;opacity:.75}
+  .hero-art{width:100%;max-width:380px;margin:6px auto 0;display:block}
+  .hero-art .breathe{animation:breathe 3.6s ease-in-out infinite;animation-delay:var(--d,0s);transform-box:fill-box;transform-origin:50% 100%}
+  @keyframes breathe{50%{transform:scale(1.035,.97)}}
+  .z{font-family:'Gaegu',cursive;font-weight:700;fill:var(--ink);animation:zfloat 3.2s ease-in-out infinite;animation-delay:var(--d,0s);transform-box:fill-box;opacity:0}
+  @keyframes zfloat{0%{opacity:0;transform:translate(0,8px)}25%{opacity:.85}100%{opacity:0;transform:translate(12px,-26px)}}
+  .title{font-size:64px;text-align:center;margin-top:4px}
+  .hook{font-family:'Gaegu',cursive;font-weight:700;font-size:30px;line-height:1.1;text-align:center;margin:6px auto 0;max-width:330px}
+  .sub{text-align:center;margin:14px auto 22px;max-width:340px}
+  .tiny{text-align:center;font-size:14px;margin-top:12px;opacity:.75}
+  .invite{
+    display:flex;align-items:center;gap:12px;margin:12px 0 0;padding:10px 14px;
+    background:var(--paper);border:2.5px dashed var(--ink);border-radius:18px;font-size:15px;
+  }
+  .invite svg{width:52px;height:52px;flex:none}
+
+  /* ---------- questions ---------- */
+  .qtop{display:flex;align-items:center;gap:8px;min-height:52px}
+  .iconbtn{
+    flex:none;width:48px;height:48px;display:grid;place-items:center;border-radius:50%;
+    background:transparent;border:2.5px solid transparent;color:var(--ink);cursor:pointer;
+  }
+  .iconbtn:active{background:var(--soft)}
+  .trail{display:flex;align-items:center;flex:1;padding:0 6px 0 2px}
+  .trail .dot{flex:none;width:12px;height:12px;border-radius:50%;border:2.5px solid var(--ink);background:var(--bg)}
+  .trail .dot.done{background:var(--ink)}
+  .trail .dot.todo{opacity:.35}
+  .trail .dot.now{width:24px;height:24px;display:grid;place-items:center;box-shadow:0 0 0 5px var(--soft)}
+  .trail .dot.now::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--ink)}
+  .trail .seg{flex:1;min-width:6px;border-top:3px dotted var(--ink);margin:0 3px;opacity:.22}
+  .trail .seg.done{opacity:1}
+  .qcount{font:800 13px 'Nunito',sans-serif;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin:18px 0 6px}
+  .qtext{font-size:34px;line-height:1.08;margin-bottom:22px;min-height:2.2em}
+  .answers{display:grid;gap:14px}
+  .answer{
+    display:flex;align-items:center;gap:14px;width:100%;min-height:74px;padding:14px 16px;
+    text-align:left;cursor:pointer;color:var(--ink);background:var(--paper);
+    font:600 17.5px/1.35 'Nunito',sans-serif;
+    border:2.5px solid var(--ink);border-radius:18px 22px 16px 20px;
+    box-shadow:0 4px 0 var(--soft);
+    transition:transform .12s ease,background .15s ease,color .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .answer:nth-child(2n){border-radius:21px 16px 22px 17px}
+  .answer .key{
+    flex:none;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;
+    border:2.5px solid currentColor;font:700 22px 'Gaegu',cursive;
+  }
+  .answer[aria-pressed="true"]{background:var(--ink);color:var(--bg);transform:scale(.985)}
+  .answer[aria-pressed="true"] .key{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+  @media (hover:hover){.answer:hover{transform:translateY(-2px)}}
+  .answer:active{transform:scale(.98)}
+
+  /* ---------- reveal ---------- */
+  #s-reveal{justify-content:center}
+  .stage{position:relative;height:min(520px,70svh);min-height:440px;overflow:hidden;cursor:pointer}
+  .rv-cap{position:absolute;top:18px;left:0;right:0;text-align:center;font:700 30px/1.1 'Gaegu',cursive}
+  .rv-phone{position:absolute;left:50%;top:90px;width:118px;margin-left:-59px;transform:rotate(-8deg);
+    transition:transform .75s cubic-bezier(.55,0,.8,.3),opacity .75s ease}
+  .rv-phone.drop{transform:translateY(460px) rotate(32deg);opacity:0}
+  .rv-riser{position:absolute;left:50%;bottom:54px;width:230px;margin-left:-115px;transform:translateY(120%);
+    transition:transform .8s cubic-bezier(.2,1.35,.4,1)}
+  .rv-riser.up{transform:translateY(0)}
+  .rv-riser.awake .pal{animation:hop .55s ease}
+  @keyframes hop{40%{transform:translateY(-30px) rotate(-3deg)}70%{transform:translateY(4px)}}
+  .rv-bang{position:absolute;right:6px;top:-4px;font:700 64px 'Gaegu',cursive;opacity:0;transform:scale(.3) rotate(-12deg);transition:all .3s cubic-bezier(.2,1.6,.4,1)}
+  .rv-riser.awake .rv-bang{opacity:1;transform:scale(1) rotate(10deg)}
+  .rv-pocket{position:absolute;left:-10px;right:-10px;bottom:0;height:110px}
+  .rv-pocket svg{width:100%;height:100%;display:block}
+  .rv-go{margin-top:14px}
+
+  /* ---------- result card ---------- */
+  .card{
+    position:relative;margin-top:6px;padding:18px 18px 22px;
+    background:var(--t);border:3px solid var(--ink);
+    border-radius:28px 33px 26px 31px;box-shadow:0 8px 0 var(--soft);
+  }
+  .card-label{text-align:center;font:800 12px 'Nunito',sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+  .card .hero-pal{display:block;width:188px;height:188px;margin:2px auto 0;filter:drop-shadow(0 6px 0 rgba(31,42,68,.14));animation:popIn .6s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes popIn{from{transform:scale(.6) translateY(20px);opacity:0}}
+  .kicker{text-align:center;font-weight:700;margin-top:6px}
+  .pal-name{text-align:center;font-size:72px;color:var(--d);line-height:.95}
+  .axes{display:block;width:max-content;margin:6px auto 0;padding:3px 12px;border-radius:999px;border:2px solid var(--ink);font:800 12px 'Nunito',sans-serif;letter-spacing:.1em;text-transform:uppercase;background:var(--paper)}
+  .bubble{
+    position:relative;margin:20px auto 0;max-width:310px;padding:10px 16px;text-align:center;
+    background:#fff;border:2.5px solid var(--ink);border-radius:20px 18px 22px 18px;
+    font:700 24px/1.15 'Gaegu',cursive;
+  }
+  .bubble::before{content:"";position:absolute;left:50%;top:-12px;width:20px;height:20px;margin-left:-10px;background:#fff;border-left:2.5px solid var(--ink);border-top:2.5px solid var(--ink);transform:rotate(45deg)}
+  .sect-label{font:800 12px 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;text-align:center;margin:18px 0 8px;opacity:.75}
+  .tags{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+  .tags.nicks li{padding:3px 14px;border:2px dashed var(--ink);border-radius:999px;font:700 21px 'Gaegu',cursive;background:rgba(255,255,255,.55)}
+  .tags.traits li{padding:6px 13px;border:2px solid var(--ink);border-radius:999px;font:700 14.5px 'Nunito',sans-serif;background:#fff}
+  .duo{display:grid;gap:12px;margin-top:20px}
+  .box{background:#fff;border:2.5px solid var(--ink);border-radius:18px 15px 19px 16px;padding:12px 15px}
+  .box h3{margin:0 0 3px;font:800 12px 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+  .box p{font-weight:600}
+  .pair{display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 14px 10px 8px;background:var(--pt);border:2.5px solid var(--ink);border-radius:18px}
+  .pair svg{flex:none;width:76px;height:76px}
+  .pair h3{margin:0;font:800 12px 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase}
+  .pair .pn{font:700 28px/1 'Gaegu',cursive}
+  .pair p{font-size:15px;font-weight:600;margin-top:2px}
+  .actions{display:grid;gap:16px;margin-top:26px}
+  .actions .linkbtn{justify-self:center}
+
+  /* ---------- final ---------- */
+  .final-top{display:flex;flex-direction:column;align-items:center;margin-top:10px}
+  .final-top .pal{width:150px;height:150px;filter:drop-shadow(0 6px 0 rgba(31,42,68,.14))}
+  .final-h{position:relative;font-size:46px;text-align:center;background:#fff;border:3px solid var(--ink);border-radius:24px 20px 26px 21px;padding:8px 20px 10px;margin-bottom:6px;order:-1}
+  .final-h::after{content:"";position:absolute;left:50%;bottom:-13px;width:22px;height:22px;margin-left:-11px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
+  .final-sub{text-align:center;margin:14px auto 20px;max-width:330px}
+  .ticket{position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:24px;overflow:hidden}
+  .ticket-top{padding:18px 20px 16px;background:var(--t);text-align:center}
+  .ticket-top .sect-label{margin:0 0 4px}
+  .station{font:700 38px/1 'Gaegu',cursive}
+  .station-line{margin-top:6px;font-weight:600}
+  .perf{position:relative;height:0;border-top:3px dashed var(--ink)}
+  .perf::before,.perf::after{content:"";position:absolute;top:-14px;width:24px;height:24px;border-radius:50%;background:var(--bg);border:3px solid var(--ink)}
+  .perf::before{left:-15px}.perf::after{right:-15px}
+  .details{margin:0;padding:14px 20px 18px;display:grid;gap:12px}
+  .details div{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:baseline}
+  .details dt{font:800 12px 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+  .details dd{margin:0;font-weight:700}
+
+  .toast{
+    position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));z-index:60;
+    transform:translate(-50%,20px);opacity:0;pointer-events:none;
+    background:var(--ink);color:var(--bg);font-weight:700;padding:12px 20px;border-radius:999px;
+    transition:all .25s ease;max-width:calc(100% - 32px);text-align:center;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .pal .eo{display:none}
+  .pal.awake .eo{display:inline}
+  .pal.awake .ec{display:none}
+
+  @media (min-width:700px){
+    .wrap{padding-top:36px}
+    .title{font-size:76px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .z{opacity:.7}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. LANDING -->
+  <section id="s-landing" class="screen" aria-labelledby="t-landing">
+    <p class="eyebrow">Touch Grass presents</p>
+    <div id="heroArt"></div>
+    <h1 id="t-landing" class="title" tabindex="-1">Pocket Pals</h1>
+    <p class="hook">Who wakes up when you put the phone down?</p>
+    <div id="inviteBanner"></div>
+    <p class="sub">8 quick questions about what you actually like doing when you’re bored. No right answers. No lectures. Promise.</p>
+    <button class="btn btn-primary" id="startBtn" type="button">Wake them up</button>
+    <p class="tiny">Takes about 2 minutes · No sign-up · Nothing saved</p>
+    <p class="foot">A <b>Touch Grass</b> campaign</p>
+  </section>
+
+  <!-- 2. QUESTIONS -->
+  <section id="s-quiz" class="screen" hidden aria-labelledby="qtext">
+    <div class="qtop">
+      <button class="iconbtn" id="backBtn" type="button" aria-label="Back">
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M16 5 L8 13 L16 21" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="trail" id="trail" role="progressbar" aria-valuemin="1"></div>
+    </div>
+    <p class="qcount" id="qcount"></p>
+    <h2 class="qtext" id="qtext" tabindex="-1"></h2>
+    <div class="answers" id="answers"></div>
+  </section>
+
+  <!-- 3. REVEAL -->
+  <section id="s-reveal" class="screen" hidden aria-labelledby="rvCap">
+    <div class="stage" id="stage"></div>
+    <button class="btn btn-primary rv-go" id="meetBtn" type="button" hidden>Meet your Pal</button>
+  </section>
+
+  <!-- 4 + 5. RESULT CARD -->
+  <section id="s-result" class="screen" hidden>
+    <article class="card" id="card"></article>
+    <div class="actions">
+      <button class="btn btn-primary" id="inviteBtn" type="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="inviteLabel">Invite your perfect pairing</span>
+      </button>
+      <button class="btn" id="saveBtn" type="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save my card
+      </button>
+      <button class="btn" id="toFinalBtn" type="button">Okay, now what? →</button>
+    </div>
+  </section>
+
+  <!-- 6. FINAL -->
+  <section id="s-final" class="screen" hidden aria-labelledby="t-final">
+    <div class="final-top">
+      <h1 id="t-final" class="final-h" tabindex="-1">Now put me down.</h1>
+      <div id="finalPal"></div>
+    </div>
+    <p class="final-sub" id="finalSub"></p>
+    <div class="ticket" id="ticket"></div>
+    <div class="actions">
+      <button class="btn" id="backToCardBtn" type="button">← Back to my card</button>
+      <button class="linkbtn" id="retakeBtn" type="button">Retake the quiz</button>
+    </div>
+    <p class="foot">A <b>Touch Grass</b> campaign · See you there</p>
+  </section>
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p style="text-align:center;padding:20px">Pocket Pals needs JavaScript switched on to run.</p></noscript>
+
+<script>
+/* =====================================================================
+   EDIT ME: EVENT DETAILS, QUESTIONS, AND PAL COPY
+   ---------------------------------------------------------------------
+   Scoring axes:
+     move:  +1 = Move,  -1 = Mellow
+     group: +1 = Group, -1 = Side by side
+   An answer can score one axis or both (leave the other out or set 0).
+   Result = which side of each axis the totals land on.
+   Tie-breaker: if an axis totals 0, the answer to the TIE_BREAKER
+   question decides it (if that doesn't score the axis either, the most
+   recent answer that did is used). Keep the tie-breaker scoring both axes.
+   Answer order is shuffled on screen, so write them in any order.
+   ===================================================================== */
+
+const EVENT = {
+  day: "Sunday 22 November",
+  time: "2pm – 4pm",
+  place: "Clementi",
+  checkin: "Park your phone at check-in. Your Pal takes it from there.",
+  campaign: "Touch Grass"
+};
+
+const QUESTIONS = [
+  { text: "Free afternoon. Zero plans. The group chat has gone suspiciously quiet. You…",
+    answers: [
+      { text: "Round people up for the void deck court. Someone has a ball. Probably.", move: 1, group: 1 },
+      { text: "Invite people over. Snacks, music, a card game that ends friendships.", move: -1, group: 1 },
+      { text: "Get on a bus you’ve never taken and see where it goes.", move: 1, group: -1 },
+      { text: "Finally start the thing: a sketch, a book, a suspiciously large puzzle.", move: -1, group: -1 }
+    ] },
+  { text: "Honest energy check. Right now you could…",
+    answers: [
+      { text: "Run a lap. Might actually do it.", move: 1 },
+      { text: "Walk somewhere. Brisk-ish.", move: 1 },
+      { text: "Lie down. Horizontally. Like a professional.", move: -1 },
+      { text: "Sit, but with your hands busy.", move: -1 }
+    ] },
+  { text: "The perfect number of people for a good afternoon is…",
+    answers: [
+      { text: "Enough for two teams and some loud subs.", group: 1 },
+      { text: "A solid 4 to 6. The core crew.", group: 1 },
+      { text: "One friend. You don’t even need to talk.", group: -1 },
+      { text: "A couple of people, each doing their own thing, together.", group: -1 }
+    ] },
+  { text: "Hawker centre. You’re somehow in charge. You…",
+    answers: [
+      { text: "Run a full food mission with assigned roles and a meeting point.", move: 1, group: 1 },
+      { text: "Chope the big table and remember everyone’s drink order.", move: -1, group: 1 },
+      { text: "Do a full lap of every stall before committing.", move: 1, group: -1 },
+      { text: "Get the usual, people-watch, and doodle on the tissue packet.", move: -1, group: -1 }
+    ] },
+  { text: "A friend texts “bored. wanna do something?” You reply…",
+    answers: [
+      { text: "“court. 20 mins. bring water”", move: 1, group: 1 },
+      { text: "“come over, I have Uno and chips”", move: -1, group: 1 },
+      { text: "“found a weird alley with murals, let’s go”", move: 1, group: -1 },
+      { text: "“come chill, I’m drawing, bring your thing”", move: -1, group: -1 }
+    ] },
+  { text: "Rain cancels your plans. Your reaction:",
+    answers: [
+      { text: "Betrayed. You were going to run around.", move: 1 },
+      { text: "Annoyed. The walk was the whole point.", move: 1 },
+      { text: "Secretly thrilled. Rain sounds are elite.", move: -1 },
+      { text: "Fine. More time for the thing you were making.", move: -1 }
+    ] },
+  { text: "At a party, you’re most likely to be found…",
+    answers: [
+      { text: "Running the game everyone’s playing.", group: 1 },
+      { text: "In the middle of the loudest conversation.", group: 1 },
+      { text: "Next to one friend, quietly judging the playlist.", group: -1 },
+      { text: "Getting to know the host’s pet.", group: -1 }
+    ] },
+  { text: "Last one. Pick a door.",
+    answers: [
+      { text: "A field, a ball, and people yelling “PASS”.", move: 1, group: 1 },
+      { text: "A sofa, snacks and a deck of cards.", move: -1, group: 1 },
+      { text: "A map with an X on it.", move: 1, group: -1 },
+      { text: "A desk full of markers and an unfinished something.", move: -1, group: -1 }
+    ] }
+];
+
+const TIE_BREAKER = QUESTIONS.length - 1; // "Pick a door"
+
+const PALS = {
+  zoomie: {
+    name: "Zoomie", axes: "Move + Group",
+    colors: { anchor: "#D55E00", deep: "#8A3C00", tint: "#FBE4D2" },
+    quote: "Finally. Who’s on my team?",
+    nicknames: ["The Captain", "Human Whistle", "Never Benched"],
+    traits: ["high energy", "rallies the crew", "competitive (nicely)", "loud laugh", "first to say “one more round”"],
+    trap: "Watching highlight reels of games you could be playing right now.",
+    fix: "Text one person “court, 20 mins.” Then actually go.",
+    pair: "cosy",
+    pairWhy: "You burn the energy, and they’ve got the snacks and the scoreboard waiting.",
+    station: { name: "Sports: Captain ball", line: "Find the court. Warm-ups optional, enthusiasm not." }
+  },
+  cosy: {
+    name: "Cosy", axes: "Mellow + Group",
+    colors: { anchor: "#F0E442", deep: "#8A7A00", tint: "#FFF9C9" },
+    quote: "Pull up a chair. I saved you a snack.",
+    nicknames: ["The Host", "Snack Keeper", "Uno Menace"],
+    traits: ["warm", "makes everyone feel included", "great listener", "lowkey competitive at cards", "keeps the vibe going"],
+    trap: "The group chat that feels like hanging out, but nobody’s actually in the same room.",
+    fix: "Move the chat to a table. Bring cards. Snacks are non-negotiable.",
+    pair: "wanderer",
+    pairWhy: "They come back with weird stories, and you make the table where they get told.",
+    station: { name: "Board & card games", line: "Pull up a chair. Someone’s already shuffling." }
+  },
+  wanderer: {
+    name: "Wanderer", axes: "Move + Side by side",
+    colors: { anchor: "#56B4E9", deep: "#1B6A99", tint: "#DDF0FB" },
+    quote: "Wait. What’s down there?",
+    nicknames: ["The Scout", "Side-Quest Specialist", "Shortcut Finder"],
+    traits: ["curious", "notices tiny details", "happy to roam", "explores other worlds, on foot or on paper", "collects small treasures"],
+    trap: "Saving 400 places to go “someday.”",
+    fix: "Pick one of those 400. Go this week. Take a friend, or don’t.",
+    pair: "doodler",
+    pairWhy: "You find the spot, and they make it worth remembering.",
+    station: { name: "Book reading corner", line: "Every good book is a side quest. Go pick yours." }
+  },
+  doodler: {
+    name: "Doodler", axes: "Mellow + Side by side",
+    colors: { anchor: "#7B3FA0", deep: "#4E2670", tint: "#EBDDF5" },
+    quote: "Hang on, I’m almost done with this bit.",
+    nicknames: ["The Maker", "Margin Artist", "Sketchbook Hoarder"],
+    traits: ["creative", "deep focus", "good with hands", "sees things others miss", "comfortable in calm", "full of ideas"],
+    trap: "Scrolling other people’s art “for inspiration” until it’s somehow midnight.",
+    fix: "Ten minutes, one pen, no undo button. See what happens.",
+    pair: "zoomie",
+    pairWhy: "They drag you outside, and you notice everything they ran past.",
+    station: { name: "Arts & crafts", line: "Markers out. No undo button, no problem." }
+  }
+};
+/* ========================== END EDIT ME ========================== */
+
+
+/* ---------------- character art (inline SVG) ---------------- */
+const INK = "#1F2A44";
+const ART = {
+  zoomie: {
+    body: "M58 176 C40 172 35 146 40 116 C44 88 54 66 68 54 L60 24 L88 45 C97 41 107 40 116 42 L130 16 L137 51 C157 63 167 89 164 119 C162 149 153 172 130 177 C106 181 80 180 58 176 Z",
+    eyes: [[84, 106], [124, 104]], m: [104, 127],
+    under: c => `<g fill="${c.deep}" stroke="${INK}" stroke-width="4"><ellipse cx="72" cy="181" rx="17" ry="9"/><ellipse cx="130" cy="181" rx="17" ry="9"/></g>`,
+    over: () => `<path d="M14 96h16M8 118h20M16 140h12" stroke="${INK}" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+    pattern: c => { let s = ""; for (let i = -6; i < 14; i++) s += `<rect x="${i * 24}" y="-60" width="10" height="330"/>`; return `<g fill="${c.deep}" opacity=".3" transform="rotate(28 100 100)">${s}</g>`; },
+    mouth: (x, y, f) => `<path d="M${x - 14} ${y - 3} Q${x} ${y + 18} ${x + 14} ${y - 3} Z" fill="${f}" stroke="${f}" stroke-width="3" stroke-linejoin="round"/>`
+  },
+  cosy: {
+    body: "M26 158 C20 126 42 98 76 92 C92 88 110 88 126 92 C160 98 182 126 174 158 C170 178 148 183 100 183 C52 183 30 178 26 158 Z",
+    eyes: [[80, 132], [118, 132]], m: [99, 150],
+    under: c => `<g fill="${c.anchor}" stroke="${INK}" stroke-width="5"><circle cx="62" cy="97" r="17"/><circle cx="138" cy="97" r="17"/></g><g fill="${c.deep}" opacity=".45"><circle cx="62" cy="94" r="7"/><circle cx="138" cy="94" r="7"/></g>`,
+    over: () => `<g transform="rotate(-6 156 146)"><path d="M140 134 h28 v24 a7 7 0 0 1 -7 7 h-14 a7 7 0 0 1 -7 -7 z" fill="#FFF8EC" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><path d="M168 140 c11 0 11 16 0 16" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/><path d="M149 126 c-4 -6 4 -8 0 -14 M159 126 c-4 -6 4 -8 0 -14" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/></g>`,
+    pattern: c => { let s = ""; for (let r = 0; r < 9; r++) for (let k = 0; k < 10; k++) s += `<circle cx="${k * 22 + (r % 2 ? 11 : 0)}" cy="${84 + r * 16}" r="4.5"/>`; return `<g fill="${c.deep}" opacity=".35">${s}</g>`; },
+    mouth: (x, y, f) => `<path d="M${x - 10} ${y} q5 6 10 0 q5 6 10 0" fill="none" stroke="${f}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`
+  },
+  wanderer: {
+    body: "M100 26 C111 46 147 78 154 116 C161 154 138 181 100 181 C62 182 39 156 46 117 C53 80 89 48 100 26 Z",
+    eyes: [[84, 124], [116, 124]], m: [100, 147],
+    under: () => `<path d="M84 170 L76 194 M116 170 L126 192" stroke="${INK}" stroke-width="6" stroke-linecap="round" fill="none"/>`,
+    over: c => `<path d="M100 28 C97 18 101 10 108 7" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/><path d="M108 7 L128 12 L109 20 Z" fill="${c.deep}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`,
+    pattern: c => `<g fill="none" stroke="${c.deep}" stroke-width="5" stroke-linecap="round" opacity=".75"><path d="M40 162 C72 172 100 170 124 150 C146 132 136 104 110 90" stroke-dasharray="9 9"/><path d="M88 66 l12 12 M100 66 l-12 12"/></g>`,
+    mouth: (x, y, f) => `<ellipse cx="${x}" cy="${y}" rx="5" ry="6" fill="${f}"/>`
+  },
+  doodler: {
+    body: "M52 170 C30 168 23 142 38 128 C24 110 36 85 58 88 C60 66 84 56 98 70 C110 52 142 56 146 80 C168 80 180 104 166 120 C182 134 174 165 150 169 C128 181 76 180 52 170 Z",
+    eyes: [[84, 124], [120, 124]], m: [102, 144], feature: "#FFF8EC",
+    under: () => "",
+    over: c => `<path d="M100 72 C93 54 112 44 121 54 C128 62 115 70 110 61" fill="none" stroke="${INK}" stroke-width="4.5" stroke-linecap="round"/><g transform="rotate(30 170 150)"><rect x="163" y="112" width="14" height="46" rx="3" fill="${c.tint}" stroke="${INK}" stroke-width="3.5"/><path d="M163 158 L170 174 L177 158 Z" fill="${INK}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/></g>`,
+    pattern: c => { let s = ""; for (let y = 78; y <= 192; y += 22) s += `<path d="M0 ${y} q10 -9 20 0${" t20 0".repeat(9)}"/>`; return `<g fill="none" stroke="${c.deep}" stroke-width="4" stroke-linecap="round" opacity=".55">${s}</g>`; },
+    mouth: (x, y, f) => `<path d="M${x - 9} ${y} Q${x} ${y + 9} ${x + 9} ${y}" fill="none" stroke="${f}" stroke-width="4" stroke-linecap="round"/>`
+  }
+};
+
+let uid = 0;
+function face(a, mode) {
+  const f = a.feature || INK;
+  const open = ([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="8.5" ry="10" fill="#fff" stroke="${INK}" stroke-width="3"/><circle cx="${x + 1.5}" cy="${y + 2}" r="5" fill="${INK}"/><circle cx="${x + 3.2}" cy="${y - .5}" r="1.6" fill="#fff"/>`;
+  const shut = ([x, y]) => `<path d="M${x - 9} ${y} Q${x} ${y + 8} ${x + 9} ${y}" fill="none" stroke="${f}" stroke-width="4.5" stroke-linecap="round"/>`;
+  const [mx, my] = a.m;
+  const awakeFace = a.eyes.map(open).join("") + a.mouth(mx, my, f);
+  const sleepFace = a.eyes.map(shut).join("") + `<ellipse cx="${mx}" cy="${my + 2}" rx="3.5" ry="3" fill="${f}"/>`;
+  if (mode === "open") return awakeFace;
+  if (mode === "shut") return sleepFace;
+  return `<g class="eo">${awakeFace}</g><g class="ec">${sleepFace}</g>`;
+}
+
+/* opts: awake, size, x, y, cls, label, still (static image for canvas), delay */
+function palSVG(key, o = {}) {
+  const { awake = true, size, x, y, cls = "", label = true, still = false, delay } = o;
+  const p = PALS[key], c = p.colors, a = ART[key], id = "pc" + (++uid);
+  const attrs = [
+    size ? `width="${size}" height="${size}"` : "",
+    x != null ? `x="${x}" y="${y}"` : "",
+    delay != null ? `style="--d:${delay}s"` : "",
+    label ? `role="img" aria-label="${p.name}"` : `aria-hidden="true"`
+  ].join(" ");
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" ${attrs} class="pal ${awake ? "awake" : ""} ${cls}">` +
+    `<defs><clipPath id="${id}"><path d="${a.body}"/></clipPath></defs>` +
+    `<ellipse cx="100" cy="188" rx="60" ry="7" fill="${INK}" opacity=".13"/>` +
+    `<g class="breathe">${a.under(c)}` +
+    `<path d="${a.body}" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/>` +
+    `<path d="${a.body}" fill="${c.anchor}"/>` +
+    `<g clip-path="url(#${id})">${a.pattern(c)}</g>` +
+    `<path d="${a.body}" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>` +
+    a.over(c) + face(a, still ? (awake ? "open" : "shut") : "both") +
+    `</g></svg>`;
+}
+
+const POCKET_LIP = `<svg viewBox="0 0 380 110" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C90 10 290 10 380 22 L380 110 L0 110 Z" fill="#2E4A72" stroke="${INK}" stroke-width="4"/><path d="M8 38 C96 27 284 27 372 38" fill="none" stroke="#FFF8EC" stroke-width="2.5" stroke-dasharray="8 7" opacity=".85"/></svg>`;
+
+const PHONE = `<svg viewBox="0 0 120 214" aria-hidden="true"><rect x="5" y="5" width="110" height="204" rx="24" fill="${INK}"/><rect x="14" y="24" width="92" height="166" rx="12" fill="#DDF0FB"/><rect x="46" y="12" width="28" height="6" rx="3" fill="#FFF8EC" opacity=".5"/><g fill="#fff" stroke="${INK}" stroke-width="2"><rect x="22" y="36" width="76" height="22" rx="8"/><rect x="22" y="64" width="62" height="22" rx="8"/><rect x="22" y="92" width="76" height="22" rx="8"/><rect x="22" y="120" width="50" height="22" rx="8"/></g><circle cx="94" cy="36" r="9" fill="#7B3FA0" stroke="#fff" stroke-width="2.5"/></svg>`;
+
+function heroSVG() {
+  const pals = [
+    ["zoomie", 4, 38, 120, 0, [100, 46]],
+    ["cosy", 86, 46, 116, .9, [172, 62]],
+    ["wanderer", 166, 30, 118, 1.7, [262, 38]],
+    ["doodler", 238, 42, 120, 2.5, [338, 58]]
+  ];
+  let s = `<svg class="hero-art" viewBox="0 0 360 300" role="img" aria-label="Four little Pals asleep in a jeans pocket: Zoomie, Cosy, Wanderer and Doodler">`;
+  pals.forEach(([k, x, y, size, d]) => { s += palSVG(k, { awake: false, size, x, y, label: false, delay: d }); });
+  s += `<path d="M10 160 C70 151 290 151 350 160 L338 272 C336 290 320 296 300 296 L60 296 C42 296 26 290 24 272 Z" fill="#2E4A72" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>`;
+  s += `<path d="M22 176 C82 168 278 168 338 176" fill="none" stroke="#FFF8EC" stroke-width="2.5" stroke-dasharray="8 7" opacity=".85"/>`;
+  s += `<path d="M36 186 L326 186 L316 264 C314 278 302 284 290 284 L70 284 C58 284 46 278 44 264 Z" fill="none" stroke="#FFF8EC" stroke-width="2.5" stroke-dasharray="8 7" opacity=".55"/>`;
+  s += `<circle cx="34" cy="172" r="5" fill="#C9D3E3" stroke="${INK}" stroke-width="2"/><circle cx="326" cy="172" r="5" fill="#C9D3E3" stroke="${INK}" stroke-width="2"/>`;
+  s += `<text x="180" y="240" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="32" fill="#FFF8EC">shh... they're asleep</text>`;
+  pals.forEach(([, , , , d, [zx, zy]], i) => {
+    s += `<text class="z" x="${zx}" y="${zy}" font-size="${i % 2 ? 20 : 24}" style="--d:${d}s">z</text>`;
+    s += `<text class="z" x="${zx + 10}" y="${zy - 14}" font-size="16" style="--d:${d + 1.1}s">z</text>`;
+  });
+  return s + `</svg>`;
+}
+
+/* ---------------- state + helpers ---------------- */
+const $ = s => document.querySelector(s);
+const gae = s => String(s).replace(/’/g, "'"); // Gaegu’s curly apostrophe renders with a wide gap
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const state = { q: 0, answers: [], orders: [], busy: false, result: null, cardBlob: null, cardPromise: null, timers: [] };
+
+function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function show(id, focusSel) {
+  document.querySelectorAll(".screen").forEach(s => { s.hidden = s.id !== "s-" + id; s.classList.remove("enter"); });
+  const el = $("#s-" + id); void el.offsetWidth; el.classList.add("enter");
+  window.scrollTo(0, 0);
+  if (focusSel) { const f = $(focusSel); if (f) f.focus({ preventScroll: true }); }
+}
+
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
+
+function baseUrl() { return location.href.split(/[?#]/)[0]; }
+
+/* ---------------- landing ---------------- */
+function initLanding() {
+  $("#heroArt").innerHTML = heroSVG();
+  const from = new URLSearchParams(location.search).get("from");
+  if (PALS[from]) {
+    const p = PALS[from], pair = PALS[p.pair];
+    $("#inviteBanner").innerHTML = `<p class="invite">${palSVG(from, { label: false })}<span>A <b>${esc(p.name)}</b> sent you this. They’re hoping you’re a <b>${esc(pair.name)}</b>. No pressure.</span></p>`;
+  }
+}
+
+/* ---------------- quiz ---------------- */
+function startQuiz() {
+  state.q = 0; state.answers = []; state.result = null;
+  state.orders = QUESTIONS.map(q => shuffle(q.answers.map((_, i) => i)));
+  renderQuestion(); show("quiz", "#qtext");
+}
+
+function renderQuestion() {
+  const n = QUESTIONS.length, q = QUESTIONS[state.q];
+  let t = "";
+  for (let i = 0; i < n; i++) {
+    const cls = i < state.q ? "done" : i === state.q ? "now" : "todo";
+    if (i) t += `<span class="seg ${i <= state.q ? "done" : ""}"></span>`;
+    t += `<span class="dot ${cls}"></span>`;
+  }
+  const trail = $("#trail");
+  trail.innerHTML = t;
+  trail.setAttribute("aria-valuemax", n);
+  trail.setAttribute("aria-valuenow", state.q + 1);
+  trail.setAttribute("aria-valuetext", `Question ${state.q + 1} of ${n}`);
+  $("#qcount").textContent = state.q === n - 1 ? "Last one" : `Step ${state.q + 1} of ${n}`;
+  $("#qtext").textContent = gae(q.text);
+  $("#answers").innerHTML = state.orders[state.q].map((ai, pos) =>
+    `<button type="button" class="answer" data-ai="${ai}" aria-pressed="${state.answers[state.q] === ai}"><span class="key" aria-hidden="true">${"ABCDEF"[pos]}</span><span>${esc(q.answers[ai].text)}</span></button>`
+  ).join("");
+}
+
+function pick(ai) {
+  if (state.busy) return;
+  state.busy = true;
+  state.answers[state.q] = ai;
+  document.querySelectorAll(".answer").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.ai === ai)));
+  setTimeout(() => {
+    state.busy = false;
+    if (state.q < QUESTIONS.length - 1) {
+      state.q++; renderQuestion();
+      const el = $("#s-quiz"); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter");
+      window.scrollTo(0, 0); $("#qtext").focus({ preventScroll: true });
+    } else {
+      runReveal(score());
+    }
+  }, reduceMotion ? 120 : 380);
+}
+
+function goBack() {
+  if (state.busy) return;
+  if (state.q === 0) { show("landing", "#t-landing"); return; }
+  state.q--; renderQuestion(); $("#qtext").focus({ preventScroll: true });
+}
+
+/* ---------------- scoring ---------------- */
+function axisValue(qi, axis) { const ai = state.answers[qi]; return ai == null ? 0 : (QUESTIONS[qi].answers[ai][axis] || 0); }
+
+function tieBreak(axis) {
+  const v = axisValue(TIE_BREAKER, axis);
+  if (v) return v;
+  for (let i = state.answers.length - 1; i >= 0; i--) { const w = axisValue(i, axis); if (w) return w; }
+  return 1;
+}
+
+function score() {
+  let move = 0, group = 0;
+  QUESTIONS.forEach((_, i) => { move += axisValue(i, "move"); group += axisValue(i, "group"); });
+  if (move === 0) move = tieBreak("move");
+  if (group === 0) group = tieBreak("group");
+  if (move > 0) return group > 0 ? "zoomie" : "wanderer";
+  return group > 0 ? "cosy" : "doodler";
+}
+
+/* ---------------- reveal ---------------- */
+function clearTimers() { state.timers.forEach(clearTimeout); state.timers = []; }
+
+function runReveal(key) {
+  state.result = key;
+  state.cardBlob = null;
+  state.cardPromise = renderCard(key).then(b => (state.cardBlob = b)).catch(() => null);
+  const stage = $("#stage");
+  stage.innerHTML =
+    `<h2 class="rv-cap" id="rvCap" tabindex="-1" aria-live="polite">Okay. Phone down…</h2>` +
+    `<div class="rv-phone" id="rvPhone">${PHONE}</div>` +
+    `<div class="rv-riser" id="rvRiser">${palSVG(key, { awake: false, label: false })}<span class="rv-bang" aria-hidden="true">!</span></div>` +
+    `<div class="rv-pocket">${POCKET_LIP}</div>`;
+  $("#meetBtn").hidden = true;
+  show("reveal", "#rvCap");
+  const phone = $("#rvPhone"), riser = $("#rvRiser"), cap = $("#rvCap");
+  const steps = [
+    () => phone.classList.add("drop"),
+    () => { riser.classList.add("up"); cap.textContent = "…something's stirring"; },
+    () => { riser.classList.add("awake"); riser.querySelector(".pal").classList.add("awake"); cap.textContent = "Someone's awake."; },
+    () => { $("#meetBtn").hidden = false; }
+  ];
+  const at = reduceMotion ? [0, 0, 0, 0] : [650, 1350, 2250, 2800];
+  clearTimers();
+  steps.forEach((fn, i) => state.timers.push(setTimeout(fn, at[i])));
+  stage.onclick = () => { clearTimers(); steps.forEach(fn => fn()); };
+}
+
+/* ---------------- result ---------------- */
+function renderResult() {
+  const key = state.result, p = PALS[key], c = p.colors, pair = PALS[p.pair];
+  const card = $("#card");
+  card.style.setProperty("--a", c.anchor);
+  card.style.setProperty("--d", c.deep);
+  card.style.setProperty("--t", c.tint);
+  card.style.setProperty("--pt", pair.colors.tint);
+  card.innerHTML = `
+    <p class="card-label">Pocket Pals · ${esc(EVENT.campaign)}</p>
+    ${palSVG(key, { cls: "hero-pal" })}
+    <p class="kicker">You woke up a</p>
+    <h1 class="pal-name" id="t-result" tabindex="-1">${esc(p.name)}</h1>
+    <span class="axes">${esc(p.axes)}</span>
+    <p class="bubble">“${esc(gae(p.quote))}”</p>
+    <p class="sect-label">aka</p>
+    <ul class="tags nicks">${p.nicknames.map(n => `<li>${esc(gae(n))}</li>`).join("")}</ul>
+    <p class="sect-label">Known for</p>
+    <ul class="tags traits">${p.traits.map(n => `<li>${esc(n)}</li>`).join("")}</ul>
+    <div class="duo">
+      <section class="box"><h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="1" width="10" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        Your phone trap</h3><p>${esc(p.trap)}</p></section>
+      <section class="box"><h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 15V7M8 9C8 5 5 3 2 3c0 4 3 6 6 6zM8 7c0-3 2-5 6-5 0 3-2 5-6 5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        Your offline fix</h3><p>${esc(p.fix)}</p></section>
+    </div>
+    <div class="pair">${palSVG(p.pair, { label: false })}
+      <div><h3>Perfect hangout pairing</h3><p class="pn">${esc(pair.name)}</p><p>${esc(p.pairWhy)}</p></div>
+    </div>`;
+  $("#inviteLabel").textContent = `Invite your ${pair.name}`;
+  show("result", "#t-result");
+}
+
+async function invite() {
+  const p = PALS[state.result], pair = PALS[p.pair];
+  const url = baseUrl() + "?from=" + state.result;
+  const text = `I got ${p.name} on Pocket Pals. My perfect hangout pairing is a ${pair.name}. Are you one? 👀`;
+  if (navigator.share) {
+    try { await navigator.share({ title: "Pocket Pals", text, url }); return; }
+    catch (e) { if (e.name === "AbortError") return; }
+  }
+  copyText(text + " " + url);
+}
+
+async function copyText(str) {
+  try { await navigator.clipboard.writeText(str); toast("Link copied! Paste it to your pairing."); return; } catch (e) {}
+  const ta = document.createElement("textarea");
+  ta.value = str; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+  ta.remove();
+  toast(ok ? "Link copied! Paste it to your pairing." : "Couldn’t copy. Long-press the address bar to share the link.");
+}
+
+async function saveCard() {
+  const name = `pocket-pal-${state.result}.png`;
+  let blob = state.cardBlob;
+  if (!blob) { toast("Drawing your card…"); blob = await state.cardPromise; }
+  if (!blob) { toast("Couldn’t make the image. A screenshot works too!"); return; }
+  const file = new File([blob], name, { type: "image/png" });
+  const touch = matchMedia("(pointer: coarse)").matches;
+  if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: "My Pocket Pal" }); return; }
+    catch (e) { if (e.name === "AbortError") return; }
+  }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast("Card saved!");
+}
+
+/* ---------------- card image (drawn on canvas) ---------------- */
+function svgImage(svg) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => res(img); img.onerror = rej;
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function wrap(ctx, text, maxW) {
+  const lines = []; let line = "";
+  for (const w of text.split(" ")) { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+  if (line) lines.push(line); return lines;
+}
+function grain(ctx, W, H) {
+  const g = document.createElement("canvas"); g.width = g.height = 128;
+  const gx = g.getContext("2d"), d = gx.createImageData(128, 128);
+  for (let i = 0; i < d.data.length; i += 4) { d.data[i] = 31; d.data[i + 1] = 42; d.data[i + 2] = 68; d.data[i + 3] = Math.random() < .5 ? Math.random() * 22 : 0; }
+  gx.putImageData(d, 0, 0);
+  ctx.fillStyle = ctx.createPattern(g, "repeat"); ctx.fillRect(0, 0, W, H);
+}
+
+async function renderCard(key) {
+  const p = PALS[key], c = p.colors, pair = PALS[p.pair];
+  try { await Promise.all(["700 80px Gaegu", "600 28px Nunito", "700 28px Nunito", "800 28px Nunito"].map(f => document.fonts.load(f))); } catch (e) {}
+  const [palImg, pairImg] = await Promise.all([
+    svgImage(palSVG(key, { size: 400, still: true })),
+    svgImage(palSVG(p.pair, { size: 130, still: true }))
+  ]);
+  const W = 1080, CX = W / 2, L = 120, R = 960, CW = R - L;
+
+  function layout(ctx, draw, H) {
+    const T = (str, font, x, y, color, align = "center") => { if (!draw) return; ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(str, x, y); };
+    const pills = (items, font, padX, h, gap, y, fill, dashed) => {
+      ctx.font = font; const rows = []; let row = [], rw = 0;
+      items.forEach(t => { const w = ctx.measureText(t).width + padX * 2; if (row.length && rw + gap + w > CW) { rows.push({ row, rw }); row = []; rw = 0; } rw += (row.length ? gap : 0) + w; row.push({ t, w }); });
+      if (row.length) rows.push({ row, rw });
+      if (draw) rows.forEach((r, i) => {
+        let x = CX - r.rw / 2; const yy = y + i * (h + gap);
+        r.row.forEach(pl => {
+          rr(ctx, x, yy, pl.w, h, h / 2); ctx.fillStyle = fill; ctx.fill();
+          ctx.lineWidth = 3.5; ctx.strokeStyle = INK; ctx.setLineDash(dashed ? [10, 8] : []); ctx.stroke(); ctx.setLineDash([]);
+          ctx.font = font; ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(pl.t, x + pl.w / 2, yy + h / 2 + 2); ctx.textBaseline = "alphabetic";
+          x += pl.w + gap;
+        });
+      });
+      return rows.length * (h + gap) - gap;
+    };
+
+    if (draw) {
+      ctx.fillStyle = "#FFF8EC"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "rgba(31,42,68,.13)"; rr(ctx, 64, 72, W - 112, H - 120, 56); ctx.fill();
+      ctx.fillStyle = c.tint; rr(ctx, 56, 56, W - 112, H - 120, 56); ctx.fill();
+      ctx.lineWidth = 7; ctx.strokeStyle = INK; ctx.stroke();
+    }
+    let y = 104;
+    T(`POCKET PALS  ·  ${EVENT.campaign.toUpperCase()}`, "800 24px Nunito", CX, y + 24, "rgba(31,42,68,.75)"); y += 40;
+    if (draw) { ctx.save(); ctx.shadowColor = "rgba(31,42,68,.16)"; ctx.shadowOffsetY = 14; ctx.drawImage(palImg, CX - 190, y, 380, 380); ctx.restore(); }
+    y += 380;
+    T("I woke up a", "700 38px Nunito", CX, y + 36, INK); y += 50;
+    T(p.name, "700 170px Gaegu", CX, y + 128, c.deep); y += 156;
+
+    ctx.font = "700 48px Gaegu";
+    const ql = wrap(ctx, `“${gae(p.quote)}”`, 740);
+    const qw = Math.max(...ql.map(l => ctx.measureText(l).width)) + 84, qh = ql.length * 54 + 40;
+    if (draw) {
+      const by = y + 20, bx = CX - qw / 2;
+      ctx.fillStyle = "#fff"; rr(ctx, bx, by, qw, qh, 32); ctx.fill(); ctx.lineWidth = 4.5; ctx.strokeStyle = INK; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(CX - 20, by + 3); ctx.lineTo(CX, by - 20); ctx.lineTo(CX + 20, by + 3); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(CX - 20, by); ctx.lineTo(CX, by - 20); ctx.lineTo(CX + 20, by); ctx.stroke();
+      ql.forEach((l, i) => T(l, "700 48px Gaegu", CX, by + 56 + i * 54, INK));
+    }
+    y += 20 + qh + 40;
+
+    T("AKA", "800 21px Nunito", CX, y + 20, "rgba(31,42,68,.75)"); y += 36;
+    y += pills(p.nicknames.map(gae), "700 38px Gaegu", 26, 62, 14, y, "rgba(255,255,255,.6)", true) + 30;
+    T("KNOWN FOR", "800 21px Nunito", CX, y + 20, "rgba(31,42,68,.75)"); y += 36;
+    y += pills(p.traits, "700 26px Nunito", 22, 54, 12, y, "#fff", false) + 36;
+
+    const colW = (CW - 24) / 2;
+    ctx.font = "600 28px Nunito";
+    const tl = wrap(ctx, p.trap, colW - 48), fl = wrap(ctx, p.fix, colW - 48);
+    const bh = 84 + Math.max(tl.length, fl.length) * 37;
+    if (draw) {
+      [[L, "YOUR PHONE TRAP", tl], [L + colW + 24, "YOUR OFFLINE FIX", fl]].forEach(([x, title, lines]) => {
+        ctx.fillStyle = "#fff"; rr(ctx, x, y, colW, bh, 28); ctx.fill(); ctx.lineWidth = 4.5; ctx.strokeStyle = INK; ctx.stroke();
+        T(title, "800 21px Nunito", x + 24, y + 44, INK, "left");
+        lines.forEach((l, i) => T(l, "600 28px Nunito", x + 24, y + 86 + i * 37, INK, "left"));
+      });
+    }
+    y += bh + 24;
+
+    ctx.font = "600 26px Nunito";
+    const wl = wrap(ctx, p.pairWhy, CW - 200);
+    const ph = Math.max(170, 120 + wl.length * 34 + 20);
+    if (draw) {
+      ctx.fillStyle = pair.colors.tint; rr(ctx, L, y, CW, ph, 28); ctx.fill(); ctx.lineWidth = 4.5; ctx.strokeStyle = INK; ctx.stroke();
+      ctx.drawImage(pairImg, L + 26, y + (ph - 130) / 2, 130, 130);
+      T("PERFECT HANGOUT PAIRING", "800 21px Nunito", L + 180, y + 44, INK, "left");
+      T(pair.name, "700 58px Gaegu", L + 180, y + 96, INK, "left");
+      wl.forEach((l, i) => T(l, "600 26px Nunito", L + 180, y + 136 + i * 34, INK, "left"));
+    }
+    y += ph + 44;
+    T("Who wakes up when you put the phone down?", "700 40px Gaegu", CX, y + 30, INK);
+    y += 50;
+    return y + 64 + 56;
+  }
+
+  const measure = document.createElement("canvas").getContext("2d");
+  const H = Math.max(1350, Math.ceil(layout(measure, false)));
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  layout(ctx, true, H);
+  grain(ctx, W, H);
+  return new Promise(res => cv.toBlob(res, "image/png"));
+}
+
+/* ---------------- final ---------------- */
+function renderFinal() {
+  const key = state.result, p = PALS[key];
+  $("#finalPal").innerHTML = palSVG(key);
+  $("#finalSub").textContent = `I’ve been in your pocket all week. On ${EVENT.day}, I’ll be waiting for you at the station below.`;
+  const t = $("#ticket");
+  t.style.setProperty("--t", p.colors.tint);
+  t.innerHTML = `
+    <div class="ticket-top"><p class="sect-label">Your station</p><p class="station">${esc(gae(p.station.name))}</p><p class="station-line">${esc(p.station.line)}</p></div>
+    <div class="perf" aria-hidden="true"></div>
+    <dl class="details">
+      <div><dt>When</dt><dd>${esc(EVENT.day)}<br>${esc(EVENT.time)}</dd></div>
+      <div><dt>Where</dt><dd>${esc(EVENT.place)}</dd></div>
+      <div><dt>Check-in</dt><dd>${esc(EVENT.checkin)}</dd></div>
+    </dl>`;
+  show("final", "#t-final");
+}
+
+/* ---------------- wire up ---------------- */
+initLanding();
+$("#startBtn").addEventListener("click", startQuiz);
+$("#backBtn").addEventListener("click", goBack);
+$("#answers").addEventListener("click", e => { const b = e.target.closest(".answer"); if (b) pick(+b.dataset.ai); });
+$("#meetBtn").addEventListener("click", () => { clearTimers(); renderResult(); });
+$("#inviteBtn").addEventListener("click", invite);
+$("#saveBtn").addEventListener("click", saveCard);
+$("#toFinalBtn").addEventListener("click", renderFinal);
+$("#backToCardBtn").addEventListener("click", () => show("result", "#t-result"));
+$("#retakeBtn").addEventListener("click", startQuiz);
+</script>
+</body>
+</html>
