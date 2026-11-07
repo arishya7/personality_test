@@ -94,11 +94,11 @@
   /* ---------- landing ---------- */
   .eyebrow{font:800 13px 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;text-align:center;margin-top:6px;opacity:.75}
   .pocket-hero{position:relative;width:100%;max-width:380px;aspect-ratio:36/27;margin:4px auto 0}
-  .peek{position:absolute;width:37%;height:auto;filter:drop-shadow(0 4px 0 rgba(31,42,68,.16));animation:bob 3.6s ease-in-out infinite}
-  .peek-0{left:-2%;top:17%;rotate:-10deg;z-index:1}
-  .peek-1{left:20%;top:2%;rotate:-5deg;animation-delay:.9s}
-  .peek-2{left:43%;top:0;rotate:5deg;animation-delay:1.8s}
-  .peek-3{left:65%;top:16%;rotate:10deg;animation-delay:2.7s;z-index:1}
+  .peek{position:absolute;height:auto;filter:drop-shadow(0 4px 0 rgba(31,42,68,.16));animation:bob 3.6s ease-in-out infinite}
+  .peek-0{width:34%;left:-1%;bottom:39%;rotate:-8deg}
+  .peek-1{width:34%;left:22%;bottom:42%;rotate:-3deg;animation-delay:.9s}
+  .peek-2{width:29%;left:49%;bottom:40%;rotate:4deg;animation-delay:1.8s}
+  .peek-3{width:23%;left:75%;bottom:38%;rotate:8deg;animation-delay:2.7s}
   @keyframes bob{50%{translate:0 -7px}}
   .pocket-front{position:absolute;left:0;bottom:0;width:100%;height:auto;z-index:2}
   .title{font-size:64px;text-align:center;margin-top:4px}
@@ -162,7 +162,7 @@
   .rv-phone{position:absolute;left:50%;top:90px;width:118px;margin-left:-59px;transform:rotate(-8deg);
     transition:transform .75s cubic-bezier(.55,0,.8,.3),opacity .75s ease}
   .rv-phone.drop{transform:translateY(460px) rotate(32deg);opacity:0}
-  .rv-riser{position:absolute;left:50%;bottom:40px;width:270px;margin-left:-135px;transform:translateY(120%);
+  .rv-riser{position:absolute;left:50%;bottom:44px;width:230px;margin-left:-115px;transform:translateY(120%);
     transition:transform .8s cubic-bezier(.2,1.35,.4,1)}
   .rv-riser.up{transform:translateY(0)}
   .rv-riser img{display:block;width:100%;height:auto;filter:grayscale(.9) brightness(.92) drop-shadow(0 6px 0 rgba(31,42,68,.14));transition:filter .6s ease}
@@ -220,7 +220,7 @@
   .box p{font-weight:600}
   .match{display:flex;align-items:center;gap:12px;padding:10px 14px 10px 8px;background:var(--mt);border:2.5px solid var(--ink);border-radius:18px}
   .match.chaos{border-style:dashed}
-  .match img{flex:none;width:80px;height:auto}
+  .match img{flex:none;width:72px;max-height:84px;object-fit:contain}
   .match h3{margin:0;font:800 11.5px 'Nunito',sans-serif;letter-spacing:.13em;text-transform:uppercase}
   .match .mn{font:700 27px/1 'Gaegu',cursive;margin-top:2px}
   .match p{font-size:14.5px;font-weight:600;margin-top:3px;line-height:1.35}
@@ -229,7 +229,7 @@
 
   /* ---------- final ---------- */
   .final-top{display:flex;flex-direction:column;align-items:center;margin-top:10px}
-  .final-top .final-img{display:block;width:min(230px,65vw);height:auto;margin-top:18px;filter:drop-shadow(0 6px 0 rgba(31,42,68,.14))}
+  .final-top .final-img{display:block;width:min(190px,55vw);height:auto;margin-top:18px;filter:drop-shadow(0 6px 0 rgba(31,42,68,.14))}
   .final-h{position:relative;font-size:46px;text-align:center;background:#fff;border:3px solid var(--ink);border-radius:24px 20px 26px 21px;padding:8px 20px 10px;margin-bottom:6px;order:-1}
   .final-h::after{content:"";position:absolute;left:50%;bottom:-13px;width:22px;height:22px;margin-left:-11px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
   .final-sub{text-align:center;margin:14px auto 20px;max-width:330px}
@@ -435,6 +435,7 @@ const PALS = {
   zoomie: {
     name: "Zoomie", axes: "Move + Group",
     image: "pals/zoomie.webp",
+    cutout: "pals/zoomie-cut.webp",
     alt: "Zoomie, an otter mid-swing with a tennis racket on a sunny field",
     colors: { anchor: "#D55E00", deep: "#8A3C00", tint: "#FBE4D2" },
     quote: "Finally. Who’s on my team?",
@@ -457,6 +458,7 @@ const PALS = {
   cosy: {
     name: "Cosy", axes: "Mellow + Group",
     image: "pals/cosy.webp",
+    cutout: "pals/cosy-cut.webp",
     alt: "Cosy, a raccoon in a beanie lounging on a pizza cushion with cards and board games",
     colors: { anchor: "#F0E442", deep: "#8A7A00", tint: "#FFF9C9" },
     quote: "Pull up a chair. I saved you a snack.",
@@ -479,6 +481,7 @@ const PALS = {
   wanderer: {
     name: "Wanderer", axes: "Move + Side by side",
     image: "pals/wanderer.webp",
+    cutout: "pals/wanderer-cut.webp",
     alt: "Wanderer, a penguin in a hiking hat with a walking stick, standing on a rock above a valley",
     colors: { anchor: "#56B4E9", deep: "#1B6A99", tint: "#DDF0FB" },
     quote: "Wait. What’s down there?",
@@ -501,6 +504,7 @@ const PALS = {
   doodler: {
     name: "Doodler", axes: "Mellow + Side by side",
     image: "pals/doodler.webp",
+    cutout: "pals/doodler-cut.webp",
     alt: "Doodler, a flamingo in a scarf on a picnic blanket at night with books and puzzle pieces",
     colors: { anchor: "#7B3FA0", deep: "#4E2670", tint: "#EBDDF5" },
     quote: "Hang on, I’m almost done with this bit.",
@@ -527,9 +531,10 @@ const PALS = {
 /* ---------------- character art ---------------- */
 const INK = "#1F2A44";
 
-function palImg(key, cls = "", decorative = false) {
+// cut = just the animal (no scene), used where the image is small or sits in the pocket
+function palImg(key, cls = "", decorative = false, cut = false) {
   const p = PALS[key];
-  return `<img src="${p.image}" class="${cls}" alt="${decorative ? "" : esc(p.alt)}" decoding="async">`;
+  return `<img src="${cut ? p.cutout : p.image}" class="${cls}" alt="${decorative ? "" : esc(p.alt)}" decoding="async">`;
 }
 
 const POCKET_LIP = `<svg viewBox="0 0 380 110" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C90 10 290 10 380 22 L380 110 L0 110 Z" fill="#2E4A72" stroke="${INK}" stroke-width="4"/><path d="M8 38 C96 27 284 27 372 38" fill="none" stroke="#FFF8EC" stroke-width="2.5" stroke-dasharray="8 7" opacity=".85"/></svg>`;
@@ -539,7 +544,7 @@ const PHONE = `<svg viewBox="0 0 120 214" aria-hidden="true"><rect x="5" y="5" w
 function heroHTML() {
   const order = ["zoomie", "cosy", "wanderer", "doodler"];
   return `<div class="pocket-hero" role="img" aria-label="Four Pocket Pals peeking out of a jeans pocket: an otter, a raccoon, a penguin and a flamingo">` +
-    order.map((k, i) => `<img src="${PALS[k].image}" alt="" class="peek peek-${i}">`).join("") +
+    order.map((k, i) => `<img src="${PALS[k].cutout}" alt="" class="peek peek-${i}">`).join("") +
     `<svg class="pocket-front" viewBox="0 0 360 150" aria-hidden="true">` +
     `<path d="M8 12 C70 2 290 2 352 12 L340 124 C338 142 322 148 302 148 L58 148 C40 148 24 142 22 124 Z" fill="#2E4A72" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>` +
     `<path d="M20 28 C82 19 278 19 340 28" fill="none" stroke="#FFF8EC" stroke-width="2.5" stroke-dasharray="8 7" opacity=".85"/>` +
@@ -690,7 +695,7 @@ function initLanding() {
   const from = new URLSearchParams(location.search).get("from");
   if (PALS[from]) {
     const p = PALS[from], pair = PALS[p.matches.best.pal];
-    $("#inviteBanner").innerHTML = `<p class="invite">${palImg(from, "", true)}<span>A <b>${esc(p.name)}</b> sent you this. They’re hoping you’re a <b>${esc(pair.name)}</b>. No pressure.</span></p>`;
+    $("#inviteBanner").innerHTML = `<p class="invite">${palImg(from, "", true, true)}<span>A <b>${esc(p.name)}</b> sent you this. They’re hoping you’re a <b>${esc(pair.name)}</b>. No pressure.</span></p>`;
   }
 }
 
@@ -780,7 +785,7 @@ function runReveal(key) {
   stage.innerHTML =
     `<h2 class="rv-cap" id="rvCap" tabindex="-1" aria-live="polite">Okay. Phone down…</h2>` +
     `<div class="rv-phone" id="rvPhone">${PHONE}</div>` +
-    `<div class="rv-riser" id="rvRiser">${palImg(key, "", true)}<span class="rv-bang" aria-hidden="true">!</span></div>` +
+    `<div class="rv-riser" id="rvRiser">${palImg(key, "", true, true)}<span class="rv-bang" aria-hidden="true">!</span></div>` +
     `<div class="rv-pocket">${POCKET_LIP}</div>`;
   $("#meetBtn").hidden = true;
   setScene("home");
@@ -809,7 +814,7 @@ function mixMeter(value, left, right) {
 
 function matchRow(kind, m) {
   const o = PALS[m.pal];
-  return `<div class="match ${kind}" style="--mt:${o.colors.tint}">${palImg(m.pal, "", true)}` +
+  return `<div class="match ${kind}" style="--mt:${o.colors.tint}">${palImg(m.pal, "", true, true)}` +
     `<div><h3>${esc(MATCH_LABELS[kind])}</h3><p class="mn">${esc(o.name)}</p><p>${esc(m.line)}</p></div></div>`;
 }
 
@@ -944,7 +949,7 @@ function grain(ctx, W, H) {
 async function renderCard(key) {
   const p = PALS[key], c = p.colors, pair = PALS[p.matches.best.pal];
   try { await Promise.all(["700 80px Gaegu", "600 28px Nunito", "700 28px Nunito", "800 28px Nunito"].map(f => document.fonts.load(f))); } catch (e) {}
-  const [heroPic, pairPic] = await Promise.all([loadImage(p.image), loadImage(pair.image)]);
+  const [heroPic, pairPic] = await Promise.all([loadImage(p.image), loadImage(pair.cutout)]);
   const heroW = 500, heroH = heroW * heroPic.naturalHeight / heroPic.naturalWidth;
   const pairW = 140, pairH = pairW * pairPic.naturalHeight / pairPic.naturalWidth;
   const W = 1080, CX = W / 2, L = 120, R = 960, CW = R - L;
@@ -1040,7 +1045,7 @@ async function renderCard(key) {
 function renderFinal() {
   const key = state.result, p = PALS[key];
   sfx.play("tap");
-  $("#finalPal").innerHTML = palImg(key, "final-img");
+  $("#finalPal").innerHTML = palImg(key, "final-img", false, true);
   $("#finalSub").textContent = `I’ve been in your pocket all week. On ${EVENT.day}, I’ll be waiting for you at the station below.`;
   const t = $("#ticket");
   t.style.setProperty("--t", p.colors.tint);
