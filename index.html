@@ -68,6 +68,7 @@
 
   /* ---------- buttons ---------- */
   .btn{
+    text-decoration:none;
     display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
     min-height:58px;padding:14px 22px;cursor:pointer;
     font:800 18px/1.2 'Nunito',sans-serif;color:var(--ink);
@@ -225,6 +226,12 @@
   .match .mn{font:700 27px/1 'Gaegu',cursive;margin-top:2px}
   .match p{font-size:14.5px;font-weight:600;margin-top:3px;line-height:1.35}
   .actions{display:grid;gap:16px;margin-top:26px}
+  .invite-box{display:grid;gap:14px;margin:34px 6px 0;padding:20px 16px 14px;text-align:center;background:var(--paper);border:3px dashed var(--ink);border-radius:26px}
+  .invite-title{font-size:36px}
+  .invite-sub{font-weight:600;margin-top:-6px}
+  .invite-preview{display:block;width:64%;height:auto;margin:6px auto 4px;border-radius:16px;rotate:-2deg;box-shadow:0 0 0 5px #fff,0 10px 0 5px rgba(31,42,68,.12)}
+  .share-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .share-row .btn{padding:12px 10px}
   .actions .linkbtn{justify-self:center}
 
   /* ---------- final ---------- */
@@ -238,6 +245,7 @@
   .ticket-top .sect-label{margin:0 0 4px}
   .station{font:700 38px/1 'Gaegu',cursive}
   .station-line{margin-top:6px;font-weight:600}
+  .signup-note{text-align:center;font-weight:700;padding:14px;border:2.5px dashed var(--ink);border-radius:18px;background:var(--paper)}
   .perf{position:relative;height:0;border-top:3px dashed var(--ink)}
   .perf::before,.perf::after{content:"";position:absolute;top:-14px;width:24px;height:24px;border-radius:50%;background:var(--bg);border:3px solid var(--ink)}
   .perf::before{left:-15px}.perf::after{right:-15px}
@@ -307,11 +315,27 @@
   <!-- 4 + 5. RESULT CARD -->
   <section id="s-result" class="screen" hidden>
     <article class="card" id="card"></article>
-    <div class="actions">
-      <button class="btn btn-primary" id="inviteBtn" type="button">
+    <section class="invite-box" aria-labelledby="inviteTitle">
+      <h2 class="invite-title" id="inviteTitle">Invite your <span id="inviteName">pairing</span></h2>
+      <p class="invite-sub" id="inviteSub"></p>
+      <img class="invite-preview" id="invitePreview" alt="Your invite card" hidden>
+      <div class="share-row">
+        <a class="btn" id="waBtn" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8a9.2 9.2 0 0 0-7.9 13.9L3 21l4.4-1.1A9.2 9.2 0 1 0 12 2.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 7.8c.3-.6.9-.6 1.2 0l.8 1.8c.1.3 0 .6-.2.8l-.6.6a6 6 0 0 0 3.1 3.1l.6-.6c.2-.2.5-.3.8-.2l1.8.8c.6.3.6.9 0 1.2-.6.6-1.5.9-2.4.7a8 8 0 0 1-5.6-5.6c-.2-.9.1-1.8.7-2.4z" fill="currentColor"/></svg>
+          WhatsApp
+        </a>
+        <a class="btn" id="tgBtn" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.5 2.8 10.8c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.6 3.4c.6.4 1.4.1 1.6-.6L22.9 4.9c.2-.9-.6-1.7-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7.4 14.1 18 7l-8.2 8.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Telegram
+        </a>
+      </div>
+      <button class="btn btn-primary" id="shareCardBtn" type="button">
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span id="inviteLabel">Invite your perfect pairing</span>
+        Share invite card
       </button>
+      <button class="linkbtn" id="copyBtn" type="button">or copy the link</button>
+    </section>
+    <div class="actions">
       <button class="btn" id="saveBtn" type="button">
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Save my card
@@ -329,6 +353,7 @@
     <p class="final-sub" id="finalSub"></p>
     <div class="ticket" id="ticket"></div>
     <div class="actions">
+      <div id="signup"></div>
       <button class="btn" id="backToCardBtn" type="button">← Back to my card</button>
       <button class="linkbtn" id="retakeBtn" type="button">Retake the quiz</button>
     </div>
@@ -361,7 +386,9 @@ const EVENT = {
   time: "2pm – 4pm",
   place: "Clementi",
   checkin: "Park your phone at check-in. Your Pal takes it from there.",
-  campaign: "Touch Grass"
+  campaign: "Touch Grass",
+  // Paste the sign-up form link here (e.g. a Google Form). Leave "" to show "Sign-up opens soon".
+  signupUrl: ""
 };
 
 const QUESTIONS = [
@@ -452,8 +479,7 @@ const PALS = {
       best:  { pal: "cosy",     line: "You burn the energy, and they’ve got the snacks and the scoreboard waiting." },
       easy:  { pal: "wanderer", line: "Neither of you can sit still. You race, they take the scenic route, you meet at the end." },
       chaos: { pal: "doodler",  line: "You want to play now. They’re “almost done with this bit.” Somehow it works." }
-    },
-    station: { name: "Sports: Captain ball", line: "Find the court. Warm-ups optional, enthusiasm not." }
+    }
   },
   cosy: {
     name: "Cosy", axes: "Mellow + Group",
@@ -475,8 +501,7 @@ const PALS = {
       best:  { pal: "zoomie",   line: "They bring the noise, you bring the table. Every game night needs both." },
       easy:  { pal: "doodler",  line: "Same couch, different hobbies, zero awkward silence." },
       chaos: { pal: "wanderer", line: "You’ve set out the snacks. They’ve already left to “check something out.”" }
-    },
-    station: { name: "Board & card games", line: "Pull up a chair. Someone’s already shuffling." }
+    }
   },
   wanderer: {
     name: "Wanderer", axes: "Move + Side by side",
@@ -498,8 +523,7 @@ const PALS = {
       best:  { pal: "doodler",  line: "You find the spot, and they make it worth remembering." },
       easy:  { pal: "zoomie",   line: "You’re both out the door first. They sprint, you detour." },
       chaos: { pal: "cosy",     line: "You want to explore. They just got comfy. Bring snacks and they might follow." }
-    },
-    station: { name: "Book reading corner", line: "Every good book is a side quest. Go pick yours." }
+    }
   },
   doodler: {
     name: "Doodler", axes: "Mellow + Side by side",
@@ -521,8 +545,7 @@ const PALS = {
       best:  { pal: "wanderer", line: "They find the weird little spots. You sketch them before anyone else notices." },
       easy:  { pal: "cosy",     line: "Quiet company, shared snacks, nobody asks what you’re making." },
       chaos: { pal: "zoomie",   line: "They’ll drag you outside. You’ll pretend to hate it. You won’t." }
-    },
-    station: { name: "Arts & crafts", line: "Markers out. No undo button, no problem." }
+    }
   }
 };
 /* ========================== END EDIT ME ========================== */
@@ -781,6 +804,8 @@ function runReveal(key) {
   state.result = key;
   state.cardBlob = null;
   state.cardPromise = renderCard(key).then(b => (state.cardBlob = b)).catch(() => null);
+  state.inviteBlob = null;
+  state.invitePromise = renderInvite(key).then(b => (state.inviteBlob = b)).catch(() => null);
   const stage = $("#stage");
   stage.innerHTML =
     `<h2 class="rv-cap" id="rvCap" tabindex="-1" aria-live="polite">Okay. Phone down…</h2>` +
@@ -867,7 +892,12 @@ function renderResult() {
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 15V7M8 9C8 5 5 3 2 3c0 4 3 6 6 6zM8 7c0-3 2-5 6-5 0 3-2 5-6 5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
         Your offline fix</h3><p>${esc(p.fix)}</p></section>
     </section>`;
-  $("#inviteLabel").textContent = `Invite your ${best.name}`;
+  const link = shareLink(), msg = shareText();
+  $("#inviteName").textContent = best.name;
+  $("#inviteSub").textContent = `Send them the quiz. If they’re a ${best.name}, bring them to the hangout.`;
+  $("#waBtn").href = "https://wa.me/?text=" + encodeURIComponent(msg + " " + link);
+  $("#tgBtn").href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(msg);
+  showInvitePreview();
   sfx.play("card");
   show("result", "#t-result");
 }
@@ -881,25 +911,53 @@ function selectTab(id, focus) {
   });
 }
 
-async function invite() {
-  const p = PALS[state.result], pair = PALS[p.matches.best.pal];
-  const url = baseUrl() + "?from=" + state.result;
-  const text = `I got ${p.name} on Pocket Pals. My perfect hangout pairing is a ${pair.name}. Are you one? 👀`;
-  if (navigator.share) {
-    try { await navigator.share({ title: "Pocket Pals", text, url }); return; }
-    catch (e) { if (e.name === "AbortError") return; }
-  }
-  copyText(text + " " + url);
+const EMOJI = { zoomie: "🦦", cosy: "🦝", wanderer: "🐧", doodler: "🦩" };
+function shareLink() { return baseUrl() + "?from=" + state.result; }
+function shareText() {
+  const p = PALS[state.result], best = PALS[p.matches.best.pal];
+  return `I got ${p.name} ${EMOJI[state.result]} on Pocket Pals. You might be my ${best.name} ${EMOJI[p.matches.best.pal]} Find your Pal, then come to the phone-free hangout (${EVENT.day}, ${EVENT.time}, ${EVENT.place}):`;
 }
 
-async function copyText(str) {
-  try { await navigator.clipboard.writeText(str); toast("Link copied! Paste it to your pairing."); return; } catch (e) {}
+async function showInvitePreview() {
+  const img = $("#invitePreview"), key = state.result;
+  img.hidden = true;
+  const blob = await state.invitePromise;
+  if (!blob || key !== state.result) return;
+  if (img.dataset.url) URL.revokeObjectURL(img.dataset.url);
+  img.src = img.dataset.url = URL.createObjectURL(blob);
+  img.hidden = false;
+}
+
+async function shareInviteCard() {
+  sfx.play("tap");
+  let blob = state.inviteBlob;
+  if (!blob) { toast("Drawing your invite…"); blob = await state.invitePromise; }
+  const text = shareText() + " " + shareLink();
+  if (!blob) { copyText(text); return; }
+  const file = new File([blob], `pocket-pals-invite-${state.result}.png`, { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], text }); return; }
+    catch (e) { if (e.name === "AbortError") return; }
+  }
+  download(blob, file.name);
+  copyText(text, "Invite saved, and the link is copied. Send both!");
+}
+
+function download(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+async function copyText(str, okMsg = "Link copied! Paste it to your pairing.") {
+  try { await navigator.clipboard.writeText(str); toast(okMsg); return; } catch (e) {}
   const ta = document.createElement("textarea");
   ta.value = str; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
   document.body.appendChild(ta); ta.select();
   let ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
   ta.remove();
-  toast(ok ? "Link copied! Paste it to your pairing." : "Couldn’t copy. Long-press the address bar to share the link.");
+  toast(ok ? okMsg : "Couldn’t copy. Long-press the address bar to share the link.");
 }
 
 async function saveCard() {
@@ -913,10 +971,7 @@ async function saveCard() {
     try { await navigator.share({ files: [file], title: "My Pocket Pal" }); return; }
     catch (e) { if (e.name === "AbortError") return; }
   }
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  download(blob, name);
   toast("Card saved!");
 }
 
@@ -1041,22 +1096,78 @@ async function renderCard(key) {
   return new Promise(res => cv.toBlob(res, "image/png"));
 }
 
+/* ---------------- invite card image (drawn on canvas) ---------------- */
+async function renderInvite(key) {
+  const p = PALS[key], c = p.colors, bestKey = p.matches.best.pal, best = PALS[bestKey];
+  try { await Promise.all(["700 80px Gaegu", "600 28px Nunito", "800 28px Nunito"].map(f => document.fonts.load(f))); } catch (e) {}
+  const [me, them] = await Promise.all([loadImage(p.cutout), loadImage(best.cutout)]);
+  const W = 1080, H = 1440, CX = W / 2;
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  const T = (str, font, x, y, color = INK, align = "center") => { ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(str, x, y); };
+  const fit = (img, cx, bottom, maxW, maxH) => {
+    const k = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight), w = img.naturalWidth * k, h = img.naturalHeight * k;
+    ctx.save(); ctx.shadowColor = "rgba(31,42,68,.16)"; ctx.shadowOffsetY = 12;
+    ctx.drawImage(img, cx - w / 2, bottom - h, w, h); ctx.restore();
+  };
+
+  ctx.fillStyle = "#FFF8EC"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "rgba(31,42,68,.13)"; rr(ctx, 60, 76, W - 112, H - 124, 60); ctx.fill();
+  ctx.fillStyle = "#fff"; rr(ctx, 44, 44, W - 88, H - 104, 68); ctx.fill();
+  ctx.fillStyle = c.tint; rr(ctx, 58, 58, W - 116, H - 132, 56); ctx.fill();
+  ctx.lineWidth = 7; ctx.strokeStyle = INK; ctx.stroke();
+
+  T("YOU’RE INVITED", "800 30px Nunito", CX, 150, "rgba(31,42,68,.75)");
+  T("Phone-free hangout", "700 104px Gaegu", CX, 258);
+
+  // the two Pals, side by side
+  fit(me, 320, 700, 380, 360);
+  fit(them, 760, 700, 380, 360);
+  T("+", "700 110px Gaegu", CX, 560);
+  T(gae(`I’m a ${p.name}`), "700 50px Gaegu", 320, 768);
+  T(gae(`You’re my ${best.name}?`), "700 50px Gaegu", 760, 768);
+
+  ctx.font = "600 32px Nunito";
+  const lines = wrap(ctx, p.matches.best.line, 820);
+  lines.forEach((l, i) => T(l, "600 32px Nunito", CX, 840 + i * 42));
+  let y = 840 + lines.length * 42 + 24;
+
+  // details ticket
+  const bh = 230;
+  ctx.fillStyle = "#fff"; rr(ctx, 130, y, W - 260, bh, 32); ctx.fill(); ctx.lineWidth = 4.5; ctx.strokeStyle = INK; ctx.stroke();
+  T(gae(EVENT.day), "700 60px Gaegu", CX, y + 78);
+  T(`${EVENT.time}  ·  ${EVENT.place}`, "800 36px Nunito", CX, y + 136);
+  T("Phones get parked at check-in.", "600 28px Nunito", CX, y + 188, "rgba(31,42,68,.8)");
+  y += bh + 66;
+
+  T("Find your Pocket Pal first:", "700 30px Nunito", CX, y);
+  T(baseUrl().replace(/^https?:\/\//, "").replace(/\/$/, ""), "800 34px Nunito", CX, y + 46, c.deep);
+  T(`A ${EVENT.campaign} campaign`, "700 34px Gaegu", CX, H - 104, "rgba(31,42,68,.7)");
+
+  grain(ctx, W, H);
+  return new Promise(res => cv.toBlob(res, "image/png"));
+}
+
 /* ---------------- final ---------------- */
 function renderFinal() {
   const key = state.result, p = PALS[key];
   sfx.play("tap");
   $("#finalPal").innerHTML = palImg(key, "final-img", false, true);
-  $("#finalSub").textContent = `I’ve been in your pocket all week. On ${EVENT.day}, I’ll be waiting for you at the station below.`;
+  const best = PALS[p.matches.best.pal];
+  $("#finalSub").textContent = "I’ve been in your pocket all week. Come hang out offline with me.";
   const t = $("#ticket");
   t.style.setProperty("--t", p.colors.tint);
   t.innerHTML = `
-    <div class="ticket-top"><p class="sect-label">Your station</p><p class="station">${esc(gae(p.station.name))}</p><p class="station-line">${esc(p.station.line)}</p></div>
+    <div class="ticket-top"><p class="sect-label">You’re invited</p><p class="station">Phone-free hangout</p><p class="station-line">${esc(`Bring your ${best.name}, or come solo and find one there.`)}</p></div>
     <div class="perf" aria-hidden="true"></div>
     <dl class="details">
       <div><dt>When</dt><dd>${esc(EVENT.day)}<br>${esc(EVENT.time)}</dd></div>
       <div><dt>Where</dt><dd>${esc(EVENT.place)}</dd></div>
       <div><dt>Check-in</dt><dd>${esc(EVENT.checkin)}</dd></div>
     </dl>`;
+  $("#signup").innerHTML = EVENT.signupUrl
+    ? `<a class="btn btn-primary" href="${esc(EVENT.signupUrl)}" target="_blank" rel="noopener">Sign up for the hangout →</a>`
+    : `<p class="signup-note">Sign-up opens soon. Watch this space!</p>`;
   show("final", "#t-final");
 }
 
@@ -1074,7 +1185,9 @@ $("#startBtn").addEventListener("click", startQuiz);
 $("#backBtn").addEventListener("click", goBack);
 $("#answers").addEventListener("click", e => { const b = e.target.closest(".answer"); if (b) pick(+b.dataset.ai); });
 $("#meetBtn").addEventListener("click", () => { clearTimers(); renderResult(); });
-$("#inviteBtn").addEventListener("click", invite);
+$("#shareCardBtn").addEventListener("click", shareInviteCard);
+$("#copyBtn").addEventListener("click", () => copyText(shareText() + " " + shareLink()));
+["#waBtn", "#tgBtn"].forEach(id => $(id).addEventListener("click", () => sfx.play("tap")));
 $("#saveBtn").addEventListener("click", saveCard);
 $("#toFinalBtn").addEventListener("click", renderFinal);
 $("#backToCardBtn").addEventListener("click", () => show("result", "#t-result"));
