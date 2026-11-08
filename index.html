@@ -4,9 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pocket Pals</title>
-<meta name="description" content="Who wakes up when you put the phone down? A 2-minute quiz for the Touch Grass phone-free hangout.">
-<meta property="og:title" content="Pocket Pals">
-<meta property="og:description" content="Who wakes up when you put the phone down? Find your Pal before Sunday's hangout.">
+<meta name="description" content="Who wakes up when you put the phone down? A 3-minute quiz for the Touch Grass phone-free hangout.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Which Pocket Pal are you?">
+<meta property="og:description" content="Who wakes up when you put the phone down? 12 quick questions, no right answers.">
+<meta property="og:image" content="https://arishya7.github.io/personality_test/share/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://arishya7.github.io/personality_test/">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFF8EC">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 12C62 30 82 46 84 66C86 86 70 94 50 94C30 94 14 86 16 66C18 46 38 30 50 12Z' fill='%2356B4E9' stroke='%231F2A44' stroke-width='6'/%3E%3Ccircle cx='40' cy='62' r='5' fill='%231F2A44'/%3E%3Ccircle cx='60' cy='62' r='5' fill='%231F2A44'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,6 +69,9 @@
   .chat{display:flex;gap:5px;padding:10px 13px;background:#fff;border:2px solid rgba(31,42,68,.25);border-radius:18px 18px 18px 4px}
   .chat i{width:8px;height:8px;border-radius:50%;background:rgba(31,42,68,.35)}
   @keyframes floatUp{10%{opacity:.9}85%{opacity:.9}100%{opacity:0;transform:translateY(-118vh)}}
+  .road{left:-60px;right:-60px;bottom:9%;height:7px;background:repeating-linear-gradient(90deg,rgba(31,42,68,.22) 0 34px,transparent 34px 68px);animation:roadmove 1.1s linear infinite}
+  @keyframes roadmove{to{transform:translateX(-68px)}}
+  .margin{top:0;bottom:0;left:26px;width:2px;background:rgba(123,63,160,.3)}
   .drop{top:-40px;width:2.5px;border-radius:2px;background:rgba(27,106,153,.38);animation:rainfall linear infinite}
   @keyframes rainfall{to{transform:translateY(115vh)}}
 
@@ -284,9 +293,9 @@
     <h1 id="t-landing" class="title spark" tabindex="-1">Pocket Pals</h1>
     <p class="hook">Who wakes up when you put the phone down?</p>
     <div id="inviteBanner"></div>
-    <p class="sub">8 quick questions about what you actually like doing when you’re bored. No right answers. No lectures. Promise.</p>
+    <p class="sub" id="landingSub"></p>
     <button class="btn btn-primary" id="startBtn" type="button">Wake them up</button>
-    <p class="tiny">Takes about 2 minutes · No sign-up · Nothing saved</p>
+    <p class="tiny" id="landingTiny"></p>
     <p class="foot">A <b>Touch Grass</b> campaign</p>
   </section>
 
@@ -378,7 +387,8 @@
    recent answer that did is used). Keep the tie-breaker scoring both axes.
    Answer order is shuffled on screen, so write them in any order.
    scene: the backdrop + sound for that question. Options:
-     afternoon, energy, crowd, hawker, text, rain, party, night
+     afternoon, energy, school, crowd, hawker, journey, text, rain, party, night
+   Tip: keep an odd number of questions scoring each axis (now 9 each) and ties can't happen.
    ===================================================================== */
 
 const EVENT = {
@@ -390,6 +400,10 @@ const EVENT = {
   // Paste the sign-up form link here (e.g. a Google Form). Leave "" to show "Sign-up opens soon".
   signupUrl: ""
 };
+
+// Anonymous, cookie-free counts via GoatCounter (goatcounter.com).
+// Paste your site code here, e.g. "pocketpals" for pocketpals.goatcounter.com. Leave "" to turn counting off.
+const ANALYTICS = { goatcounter: "" };
 
 const QUESTIONS = [
   { scene: "afternoon", text: "Free afternoon. Zero plans. The group chat has gone suspiciously quiet. You…",
@@ -406,6 +420,13 @@ const QUESTIONS = [
       { text: "Lie down. Horizontally. Like a professional.", move: -1 },
       { text: "Sit, but with your hands busy.", move: -1 }
     ] },
+  { scene: "school", text: "School’s out early. Surprise free hours. First move?",
+    answers: [
+      { text: "Rally a game at the court before anyone goes home.", move: 1, group: 1 },
+      { text: "Bubble tea run, then camp at someone’s place.", move: -1, group: 1 },
+      { text: "Walk home the long way. On purpose.", move: 1, group: -1 },
+      { text: "Library corner, headphones in, finally reading that thing.", move: -1, group: -1 }
+    ] },
   { scene: "crowd", text: "The perfect number of people for a good afternoon is…",
     answers: [
       { text: "Enough for two teams and some loud subs.", group: 1 },
@@ -420,6 +441,13 @@ const QUESTIONS = [
       { text: "Do a full lap of every stall before committing.", move: 1, group: -1 },
       { text: "Get the usual, people-watch, and doodle on the tissue packet.", move: -1, group: -1 }
     ] },
+  { scene: "journey", text: "You need to get somewhere 15 minutes away. You…",
+    answers: [
+      { text: "Cycle. Obviously.", move: 1 },
+      { text: "Walk, with a detour or two.", move: 1 },
+      { text: "Bus. Window seat. Staring dramatically out the window.", move: -1 },
+      { text: "Get a lift and nap.", move: -1 }
+    ] },
   { scene: "text", text: "A friend texts “bored. wanna do something?” You reply…",
     answers: [
       { text: "“court. 20 mins. bring water”", move: 1, group: 1 },
@@ -427,12 +455,26 @@ const QUESTIONS = [
       { text: "“found a weird alley with murals, let’s go”", move: 1, group: -1 },
       { text: "“come chill, I’m drawing, bring your thing”", move: -1, group: -1 }
     ] },
+  { scene: "afternoon", text: "Pick a weekend side quest.",
+    answers: [
+      { text: "Laser tag or a trampoline park with the whole class.", move: 1, group: 1 },
+      { text: "Hosting a karaoke or board game night.", move: -1, group: 1 },
+      { text: "Cycling the park connector to see where it ends.", move: 1, group: -1 },
+      { text: "A pottery or craft workshop, solo or with one friend.", move: -1, group: -1 }
+    ] },
   { scene: "rain", text: "Rain cancels your plans. Your reaction:",
     answers: [
       { text: "Betrayed. You were going to run around.", move: 1 },
       { text: "Annoyed. The walk was the whole point.", move: 1 },
       { text: "Secretly thrilled. Rain sounds are elite.", move: -1 },
       { text: "Fine. More time for the thing you were making.", move: -1 }
+    ] },
+  { scene: "school", text: "Group project time. You’re the one who…",
+    answers: [
+      { text: "Starts the group chat and assigns everyone a role.", group: 1 },
+      { text: "Keeps everyone hyped (and fed).", group: 1 },
+      { text: "Quietly does your part really, really well.", group: -1 },
+      { text: "Works best alongside one teammate.", group: -1 }
     ] },
   { scene: "party", text: "At a party, you’re most likely to be found…",
     answers: [
@@ -590,6 +632,9 @@ const FX = {
   rain: n => many(n, () => `<span class="fx drop" style="left:${rnd(0, 100)}%;height:${rnd(14, 28)}px;animation-duration:${rnd(.7, 1.2)}s;animation-delay:-${rnd(0, 1.2)}s"></span>`),
   notes: n => many(n, (_, i) => `<svg class="fx note" style="left:${rnd(2, 90)}%;width:${rnd(18, 28)}px;animation-duration:${rnd(9, 14)}s;animation-delay:-${rnd(0, 14)}s" viewBox="0 0 24 30"><path d="M9 24 V4 L21 1 V20" fill="none" stroke="${["#7B3FA0", "#1B6A99"][i % 2]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><circle cx="6" cy="24" r="4.5" fill="${["#7B3FA0", "#1B6A99"][i % 2]}" opacity=".55"/><circle cx="18" cy="21" r="4.5" fill="${["#7B3FA0", "#1B6A99"][i % 2]}" opacity=".55"/></svg>`),
   stars: n => many(n, () => `<svg class="fx star" style="top:${rnd(2, 50)}%;left:${rnd(2, 95)}%;width:${rnd(10, 20)}px;animation-delay:-${rnd(0, 2.6)}s" viewBox="0 0 20 20"><path d="M10 0 L12.5 7.5 L20 10 L12.5 12.5 L10 20 L7.5 12.5 L0 10 L7.5 7.5 Z" fill="#F2B92E"/></svg>`),
+  planes: n => many(n, () => `<svg class="fx cloud" style="top:${rnd(6, 70)}%;width:${rnd(34, 50)}px;animation-duration:${rnd(16, 26)}s;animation-delay:-${rnd(0, 24)}s" viewBox="0 0 40 30"><path d="M2 14 L38 2 L26 28 L18 18 Z M18 18 L38 2" fill="#fff" stroke="#1F2A44" stroke-opacity=".35" stroke-width="2" stroke-linejoin="round"/></svg>`),
+  road: () => `<div class="fx road"></div>`,
+  margin: () => `<div class="fx margin"></div>`,
   moon: () => `<svg class="fx" style="top:86px;right:5%;width:54px" viewBox="0 0 60 60"><path d="M38 4 A27 27 0 1 0 56 42 A21 21 0 1 1 38 4 Z" fill="#FFE7A0" stroke="#1F2A44" stroke-opacity=".25" stroke-width="2"/></svg>`
 };
 const SCENES = {
@@ -597,6 +642,8 @@ const SCENES = {
   afternoon: { bg: "linear-gradient(180deg,#CFE9F8 0%,#E8F4FA 38%,#FFF8EC 78%)", fx: () => FX.clouds(4), sound: "birds" },
   energy:    { bg: "linear-gradient(180deg,#FFF0A8 0%,#FFF6D6 40%,#FFF8EC 80%)", fx: () => FX.sun(), sound: "boing" },
   crowd:     { bg: "linear-gradient(180deg,#EBDDF5 0%,#F6EFF3 45%,#FFF8EC 82%)", fx: () => FX.confetti(16), sound: "pops" },
+  school:    { bg: "repeating-linear-gradient(180deg,transparent 0 33px,rgba(27,106,153,.11) 33px 35px),linear-gradient(180deg,#F1EEFB 0%,#F8F4F6 50%,#FFF8EC 90%)", fx: () => FX.margin() + FX.planes(3), sound: "bell" },
+  journey:   { bg: "linear-gradient(180deg,#FFE6CF 0%,#FDF0E4 45%,#FFF8EC 85%)", fx: () => FX.clouds(2) + FX.road(), sound: "bike" },
   hawker:    { bg: "linear-gradient(180deg,#FBE0CB 0%,#FDEFE1 45%,#FFF8EC 85%)", fx: () => FX.lights() + FX.steam(4), sound: "sizzle" },
   text:      { bg: "linear-gradient(180deg,#D7EDFA 0%,#EEF6F9 45%,#FFF8EC 85%)", fx: () => FX.chats(6), sound: "ding" },
   rain:      { bg: "linear-gradient(180deg,#C3D2E6 0%,#DAE3EE 50%,#ECEFF3 90%)", fx: () => FX.rain(36), sound: "rain" },
@@ -649,6 +696,19 @@ const sfx = {
     else { g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); }
     src.connect(f); f.connect(g); g.connect(dest); src.start(t); if (!loop) src.stop(t + dur + .05); this.track(dest, src);
   },
+  drone(f, t, { type = "sine", vol = .01, dest = this.master } = {}) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 1.5);
+    o.connect(g); g.connect(dest); o.start(t); this.track(dest, o);
+  },
+  every(dest, ms, fn) {
+    const tick = () => {
+      if (this.bus !== dest || !this.on || !this.ctx || this.ctx.state !== "running") return;
+      try { fn(this.ctx.currentTime + .03); } catch (e) {}
+    };
+    dest._timers.push(setInterval(tick, ms));
+  },
   play(name) {
     if (!this.on || !this.ctx || !SOUNDS[name]) return;
     try { SOUNDS[name](this, this.ctx.currentTime + .02, this.master); } catch (e) {}
@@ -660,10 +720,11 @@ const sfx = {
     if (this.bus) {
       const old = this.bus;
       old.gain.setTargetAtTime(0, now, .12);
+      old._timers.forEach(clearInterval);
       old._srcs.forEach(src => { try { src.stop(now + .8); } catch (e) {} });
       setTimeout(() => old.disconnect(), 1200);
     }
-    this.bus = c.createGain(); this.bus._srcs = []; this.bus.connect(this.master);
+    this.bus = c.createGain(); this.bus._srcs = []; this.bus._timers = []; this.bus.connect(this.master);
     if (this.on && name && SOUNDS[name]) { try { SOUNDS[name](this, now + .08, this.bus); } catch (e) {} }
   },
   toggle() {
@@ -675,17 +736,73 @@ const sfx = {
   }
 };
 
+const R = (a, b) => a + Math.random() * (b - a);
+// Scene sounds: a short cue when the question appears, then a quiet bed that keeps going until the next scene.
 const SOUNDS = {
   tap:     (s, t, d) => s.tone(620, t, .08, { to: 900, vol: .1, dest: d }),
   pick:    (s, t, d) => { s.tone(520, t, .1, { type: "triangle", to: 780, vol: .16, dest: d }); s.tone(1040, t + .07, .12, { vol: .06, dest: d }); },
-  birds:   (s, t, d) => [0, .14, .55, .68, 1.3].forEach((o, i) => s.tone(2300 + i * 180, t + o, .08, { to: 3300, vol: .05, dest: d })),
-  boing:   (s, t, d) => { s.tone(140, t, .4, { type: "triangle", to: 560, vol: .2, dest: d }); s.tone(560, t + .38, .25, { type: "triangle", to: 380, vol: .08, dest: d }); },
-  pops:    (s, t, d) => [523, 659, 784, 1046].forEach((f, i) => s.tone(f, t + i * .08, .14, { type: "triangle", vol: .11, dest: d })),
-  sizzle:  (s, t, d) => { s.noise(t, 1.6, { type: "highpass", freq: 3800, vol: .05, dest: d }); s.tone(180, t, .18, { to: 90, vol: .12, dest: d }); },
-  ding:    (s, t, d) => { s.tone(1318, t, .4, { vol: .1, dest: d }); s.tone(1760, t + .13, .55, { vol: .1, dest: d }); },
+  birds:   (s, t, d) => {   // afternoon: breeze + birds now and then
+    const chirp = (t0, n) => { for (let i = 0; i < n; i++) s.tone(R(2300, 3200), t0 + i * .13, .08, { to: 3400, vol: .04, dest: d }); };
+    chirp(t, 3); chirp(t + .6, 2);
+    s.noise(t, 0, { type: "lowpass", freq: 600, vol: .055, loop: true, dest: d });
+    s.every(d, 2600, t0 => { if (Math.random() < .75) chirp(t0 + R(0, .8), 2 + (Math.random() * 3 | 0)); });
+  },
+  boing:   (s, t, d) => {   // energy: bright hum + sparkles
+    s.tone(140, t, .4, { type: "triangle", to: 560, vol: .2, dest: d }); s.tone(560, t + .38, .25, { type: "triangle", to: 380, vol: .08, dest: d });
+    [196, 294, 392].forEach(f => s.drone(f, t, { type: "triangle", vol: .009, dest: d }));
+    s.every(d, 1800, t0 => s.tone([1568, 1760, 2093, 2349][Math.random() * 4 | 0], t0 + R(0, .5), .5, { vol: .025, dest: d }));
+  },
+  bell:    (s, t, d) => {   // school: classroom hush, clock tick, pencil scratches
+    s.tone(1568, t, .7, { type: "triangle", vol: .08, dest: d }); s.tone(1318, t + .28, .8, { type: "triangle", vol: .08, dest: d });
+    s.noise(t, 0, { type: "lowpass", freq: 400, vol: .05, loop: true, dest: d });
+    s.every(d, 1000, t0 => s.noise(t0, .025, { type: "highpass", freq: 2500, vol: .035, dest: d }));
+    s.every(d, 4300, t0 => s.noise(t0 + R(0, 1), R(.25, .5), { freq: 3000, q: 4, vol: .03, dest: d }));
+  },
+  pops:    (s, t, d) => {   // crowd: murmur + little pops
+    [523, 659, 784, 1046].forEach((f, i) => s.tone(f, t + i * .08, .14, { type: "triangle", vol: .11, dest: d }));
+    s.noise(t, 0, { freq: 600, q: .6, vol: .05, loop: true, dest: d });
+    s.every(d, 2200, t0 => { if (Math.random() < .6) s.tone(R(500, 900), t0 + R(0, .6), .12, { type: "triangle", vol: .04, dest: d }); });
+  },
+  sizzle:  (s, t, d) => {   // hawker: wok sizzle, chatter, cutlery clinks
+    s.noise(t, 1.6, { type: "highpass", freq: 3800, vol: .05, dest: d }); s.tone(180, t, .18, { to: 90, vol: .12, dest: d });
+    s.noise(t, 0, { type: "highpass", freq: 4200, vol: .02, loop: true, dest: d });
+    s.noise(t, 0, { freq: 450, q: .7, vol: .035, loop: true, dest: d });
+    s.every(d, 2600, t0 => { if (Math.random() < .7) s.tone(R(2600, 3400), t0 + R(0, .8), .25, { type: "triangle", vol: .03, dest: d }); });
+  },
+  bike:    (s, t, d) => {   // journey: road rumble + the odd bike bell
+    const ring = t0 => [0, .14].forEach(o => { s.tone(2637, t0 + o, .25, { vol: .06, dest: d }); s.tone(3520, t0 + o, .18, { vol: .025, dest: d }); });
+    ring(t);
+    s.noise(t, 0, { type: "lowpass", freq: 260, vol: .09, loop: true, dest: d });
+    s.every(d, 6500, t0 => ring(t0 + R(0, 1.5)));
+  },
+  ding:    (s, t, d) => {   // text: soft pad, typing, the odd message ding
+    s.tone(1318, t, .4, { vol: .1, dest: d }); s.tone(1760, t + .13, .55, { vol: .1, dest: d });
+    [220, 277, 330].forEach(f => s.drone(f, t, { vol: .007, dest: d }));
+    s.every(d, 3200, t0 => {
+      if (Math.random() < .3) { s.tone(1318, t0, .35, { vol: .05, dest: d }); s.tone(1760, t0 + .12, .45, { vol: .05, dest: d }); }
+      else for (let i = 0, n = 3 + (Math.random() * 4 | 0); i < n; i++) s.noise(t0 + i * R(.08, .14), .02, { type: "highpass", freq: 3000, vol: .04, dest: d });
+    });
+  },
   rain:    (s, t, d) => { s.noise(t, 0, { type: "lowpass", freq: 1600, vol: .07, loop: true, dest: d }); s.noise(t, 0, { type: "highpass", freq: 6000, vol: .015, loop: true, dest: d }); },
-  party:   (s, t, d) => { for (let i = 0; i < 16; i++) { s.tone(150, t + i * .46, .22, { to: 55, vol: .3, dest: d }); s.noise(t + i * .46 + .23, .05, { type: "highpass", freq: 7000, vol: .03, dest: d }); if (i % 4 === 0) s.tone([220, 196, 247, 220][i / 4 % 4], t + i * .46, .9, { type: "triangle", vol: .04, dest: d }); } },
-  shimmer: (s, t, d) => [1046, 1318, 1568, 2093, 2637].forEach((f, i) => s.tone(f, t + i * .08, .7, { vol: .045, dest: d })),
+  party:   (s, t, d) => {   // party: the beat keeps going, bar after bar
+    let next = t, bar = 0;
+    const play = () => {
+      for (let i = 0; i < 4; i++) {
+        const bt = next + i * .46;
+        s.tone(150, bt, .22, { to: 55, vol: .13, dest: d });
+        s.noise(bt + .23, .05, { type: "highpass", freq: 7000, vol: .03, dest: d });
+      }
+      s.tone([220, 196, 247, 220][bar++ % 4], next, 1.6, { type: "triangle", vol: .04, dest: d });
+      next += 1.84;
+    };
+    play(); play();
+    s.every(d, 1840, () => { if (next < s.ctx.currentTime) next = s.ctx.currentTime + .05; play(); });
+  },
+  shimmer: (s, t, d) => {   // night: low hum + crickets
+    [1046, 1318, 1568, 2093, 2637].forEach((f, i) => s.tone(f, t + i * .08, .7, { vol: .045, dest: d }));
+    s.drone(131, t, { vol: .012, dest: d }); s.drone(196, t, { vol: .007, dest: d });
+    s.every(d, 1100, t0 => { if (Math.random() < .8) for (let k = 0; k < 3; k++) s.tone(4400, t0 + k * .06, .04, { vol: .02, dest: d }); });
+  },
   whoosh:  (s, t, d) => s.noise(t, .7, { freq: 300, to: 2600, q: .8, vol: .16, dest: d }),
   wake:    (s, t, d) => { [523, 659, 784, 1046].forEach((f, i) => s.tone(f, t + i * .09, .4, { type: "triangle", vol: .13, dest: d })); [1568, 2093].forEach((f, i) => s.tone(f, t + .4 + i * .08, .6, { vol: .05, dest: d })); },
   card:    (s, t, d) => [784, 988, 1175].forEach((f, i) => s.tone(f, t + i * .06, .18, { type: "triangle", vol: .09, dest: d }))
@@ -710,13 +827,37 @@ function show(id, focusSel) {
 let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
 
+function quizMinutes() { return Math.max(2, Math.round(QUESTIONS.length / 4)); }
 function baseUrl() { return location.href.split(/[?#]/)[0]; }
+function siteDir() { return baseUrl().replace(/[^/]*$/, ""); }
+
+/* ---------------- anonymous counts (no cookies, no personal data) ---------------- */
+function track(name, title) {
+  if (!ANALYTICS.goatcounter) return;
+  const send = () => window.goatcounter.count({ path: name, title: title || name, event: true });
+  if (window.goatcounter && window.goatcounter.count) send(); else (track.queue = track.queue || []).push(send);
+}
+function initAnalytics() {
+  if (!ANALYTICS.goatcounter) return;
+  window.goatcounter = { no_onload: true };
+  const sc = document.createElement("script");
+  sc.async = true; sc.src = "https://gc.zgo.at/count.js";
+  sc.dataset.goatcounter = `https://${ANALYTICS.goatcounter}.goatcounter.com/count`;
+  sc.onload = () => {
+    window.goatcounter.count({ path: "/", title: "Pocket Pals" });
+    (track.queue || []).forEach(f => f()); track.queue = [];
+  };
+  document.head.appendChild(sc);
+}
 
 /* ---------------- landing ---------------- */
 function initLanding() {
   $("#heroArt").innerHTML = heroHTML();
+  $("#landingSub").textContent = `${QUESTIONS.length} quick questions about what you actually like doing when you’re bored. No right answers. No lectures. Promise.`;
+  $("#landingTiny").textContent = `Takes about ${quizMinutes()} minutes · No sign-up · Anonymous`;
   const from = new URLSearchParams(location.search).get("from");
   if (PALS[from]) {
+    track("invite-opened-" + from, `Opened an invite from a ${PALS[from].name}`);
     const p = PALS[from], pair = PALS[p.matches.best.pal];
     $("#inviteBanner").innerHTML = `<p class="invite">${palImg(from, "", true, true)}<span>A <b>${esc(p.name)}</b> sent you this. They’re hoping you’re a <b>${esc(pair.name)}</b>. No pressure.</span></p>`;
   }
@@ -725,6 +866,7 @@ function initLanding() {
 /* ---------------- quiz ---------------- */
 function startQuiz() {
   sfx.init(); sfx.play("tap");
+  track(state.result ? "quiz-retake" : "quiz-start");
   state.q = 0; state.answers = []; state.result = null;
   state.orders = QUESTIONS.map(q => shuffle(q.answers.map((_, i) => i)));
   renderQuestion(); show("quiz", "#qtext");
@@ -805,6 +947,7 @@ function runReveal(key) {
   state.cardBlob = null;
   state.cardPromise = renderCard(key).then(b => (state.cardBlob = b)).catch(() => null);
   state.inviteBlob = null;
+  track("quiz-complete-" + key, `Finished: ${PALS[key].name}`);
   state.invitePromise = renderInvite(key).then(b => (state.inviteBlob = b)).catch(() => null);
   const stage = $("#stage");
   stage.innerHTML =
@@ -895,8 +1038,8 @@ function renderResult() {
   const link = shareLink(), msg = shareText();
   $("#inviteName").textContent = best.name;
   $("#inviteSub").textContent = `Send them the quiz. If they’re a ${best.name}, bring them to the hangout.`;
-  $("#waBtn").href = "https://wa.me/?text=" + encodeURIComponent(msg + " " + link);
-  $("#tgBtn").href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(msg);
+  $("#waBtn").href = "https://wa.me/?text=" + encodeURIComponent(`${msg} ${link}\n\n${shareTail()}`);
+  $("#tgBtn").href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(`${msg}\n${shareTail()}`);
   showInvitePreview();
   sfx.play("card");
   show("result", "#t-result");
@@ -912,11 +1055,13 @@ function selectTab(id, focus) {
 }
 
 const EMOJI = { zoomie: "🦦", cosy: "🦝", wanderer: "🐧", doodler: "🦩" };
-function shareLink() { return baseUrl() + "?from=" + state.result; }
+// each Pal has a tiny page at p/<pal>/ whose link preview shows that Pal's card, then forwards into the quiz
+function shareLink() { return `${siteDir()}p/${state.result}/`; }
 function shareText() {
-  const p = PALS[state.result], best = PALS[p.matches.best.pal];
-  return `I got ${p.name} ${EMOJI[state.result]} on Pocket Pals. You might be my ${best.name} ${EMOJI[p.matches.best.pal]} Find your Pal, then come to the phone-free hangout (${EVENT.day}, ${EVENT.time}, ${EVENT.place}):`;
+  const p = PALS[state.result];
+  return `I’m a ${p.name} ${EMOJI[state.result]} on Pocket Pals! Which Pal are you? Find out in ${quizMinutes()} mins 👉`;
 }
+function shareTail() { return `Then come to the phone-free hangout: ${EVENT.day}, ${EVENT.time}, ${EVENT.place}.`; }
 
 async function showInvitePreview() {
   const img = $("#invitePreview"), key = state.result;
@@ -932,7 +1077,8 @@ async function shareInviteCard() {
   sfx.play("tap");
   let blob = state.inviteBlob;
   if (!blob) { toast("Drawing your invite…"); blob = await state.invitePromise; }
-  const text = shareText() + " " + shareLink();
+  track("share-card");
+  const text = `${shareText()} ${shareLink()}\n\n${shareTail()}`;
   if (!blob) { copyText(text); return; }
   const file = new File([blob], `pocket-pals-invite-${state.result}.png`, { type: "image/png" });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -961,6 +1107,7 @@ async function copyText(str, okMsg = "Link copied! Paste it to your pairing.") {
 }
 
 async function saveCard() {
+  track("save-card");
   const name = `pocket-pal-${state.result}.png`;
   let blob = state.cardBlob;
   if (!blob) { toast("Drawing your card…"); blob = await state.cardPromise; }
@@ -1140,8 +1287,8 @@ async function renderInvite(key) {
   T("Phones get parked at check-in.", "600 28px Nunito", CX, y + 188, "rgba(31,42,68,.8)");
   y += bh + 66;
 
-  T("Find your Pocket Pal first:", "700 30px Nunito", CX, y);
-  T(baseUrl().replace(/^https?:\/\//, "").replace(/\/$/, ""), "800 34px Nunito", CX, y + 46, c.deep);
+  T("Which Pal are you? Find out:", "700 30px Nunito", CX, y);
+  T(siteDir().replace(/^https?:\/\//, "").replace(/\/$/, ""), "800 34px Nunito", CX, y + 46, c.deep);
   T(`A ${EVENT.campaign} campaign`, "700 34px Gaegu", CX, H - 104, "rgba(31,42,68,.7)");
 
   grain(ctx, W, H);
@@ -1172,6 +1319,11 @@ function renderFinal() {
 }
 
 /* ---------------- wire up ---------------- */
+document.addEventListener("visibilitychange", () => {
+  if (!sfx.ctx) return;
+  if (document.hidden) sfx.ctx.suspend(); else if (sfx.on) sfx.ctx.resume();
+});
+initAnalytics();
 initLanding();
 setScene("home");
 $("#soundBtn").addEventListener("click", e => { e.currentTarget.setAttribute("aria-pressed", sfx.toggle()); });
@@ -1186,10 +1338,12 @@ $("#backBtn").addEventListener("click", goBack);
 $("#answers").addEventListener("click", e => { const b = e.target.closest(".answer"); if (b) pick(+b.dataset.ai); });
 $("#meetBtn").addEventListener("click", () => { clearTimers(); renderResult(); });
 $("#shareCardBtn").addEventListener("click", shareInviteCard);
-$("#copyBtn").addEventListener("click", () => copyText(shareText() + " " + shareLink()));
-["#waBtn", "#tgBtn"].forEach(id => $(id).addEventListener("click", () => sfx.play("tap")));
+$("#copyBtn").addEventListener("click", () => { track("share-copy-link"); copyText(`${shareText()} ${shareLink()}\n\n${shareTail()}`); });
+$("#waBtn").addEventListener("click", () => { sfx.play("tap"); track("share-whatsapp"); });
+$("#tgBtn").addEventListener("click", () => { sfx.play("tap"); track("share-telegram"); });
+$("#signup").addEventListener("click", e => { if (e.target.closest("a")) track("signup-click"); });
 $("#saveBtn").addEventListener("click", saveCard);
-$("#toFinalBtn").addEventListener("click", renderFinal);
+$("#toFinalBtn").addEventListener("click", () => { track("next-screen"); renderFinal(); });
 $("#backToCardBtn").addEventListener("click", () => show("result", "#t-result"));
 $("#retakeBtn").addEventListener("click", startQuiz);
 $("#backToCardBtn").addEventListener("click", () => sfx.play("tap"));
